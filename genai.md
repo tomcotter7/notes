@@ -17,6 +17,11 @@ The authors argue that prompt engineering is brittle, and akin to manually finet
 
 ### Retrieval
 
+#### Is Cosine Similarity of Embeddings Really About Similarity?
+
+[Paper](https://arxiv.org/pdf/2403.05440.pdf)
+
+
 #### Vector Databases
 
 Multi-Tenancy or Role-Based Access Control (RBAC) can be implemented using metadata filtering. There is blog post by Q-drant on this [here](https://qdrant.tech/documentation/tutorials/llama-index-multitenancy/)
