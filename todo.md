@@ -13,6 +13,8 @@
 - [ReST for Language Modelling](https://arxiv.org/pdf/2308.08998.pdf)
 - [Guardrails](https://shreyar.github.io/guardrails/)
 - [Magnetic](https://github.com/jackmpcollins/magentic#magentic)
+- Research building knowledge graphs from documents (text) - including complex text such as technical documents, patents, etc.
+- Look for datasets to train a classifier model on q&a relevance
 
 
 

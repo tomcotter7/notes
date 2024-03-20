@@ -66,6 +66,31 @@ We can use this to combine the results of multiple queries.
 
 **Sub Query Transformation**. This means using an LLM to break a query down into multiple sub-queries if required. For example, "Which has more Github stars, Langchain or LlamaIndex?", can be broken down into "How many Github stars does Langchain have?" and "How many Github stars does LlamaIndex have?", then the results can be combined.
 
+#### Knowledge Graphs for RAG
+
+Neo4j offers built in `vector indexes`, which can be used to store embeddings. Once we have the `top-n` documents, we can grab the surrounding documents in the knowledge graph and use them as context for the LLM. See [here](https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/)
+
+How to build these KGs?
+    - In the basic course, they define 2 relationship, "NEXT" & "PART-OF", where "NEXT" links chunks to chunks and "PART-OF" links chunks to documents.
+    - They also create a relationship "FIRST" which links the first chunk of a section to the section.
+
+The true power would come from using a more complex KG, with relationship that have more meaning. 
+
+#### Self-RAG
+
+Self-RAG is a technique to prevent unnessecary retrieval, or remove irrelevant passages from the retrieved documents if required. In the [paper](https://arxiv.org/pdf/2310.11511.pdf), they train their own LM to do this. The steps are as folows:
+
+- For a given input $x$, they generate a response $y$.
+- Then, they generate a single token given $x$ and $y$ to determine if retrieval is required, collecting the documents $d$.
+- Given $x$, $y$ and $d$, they generate 3 `reflection` tokens
+    - (1) IsRel - whether the document $d_i$ is relevant to the input $x$.
+    - (2) IsSup - whether the document $d_i$ fully supports, partially supports or does not support the output $y$.
+    - (3) IsUseful - how useful the response $y$ is to the input $x$.
+
+(1) is generated first, then $y$ would be updated. Then (2) and (3) would be generated to determine what to do with the output $y$.
+
+I believe we can use a classifier model / smaller LM to do the same thing.
+
 ## Fine-Tuning
 
 ### RLAIF
@@ -79,6 +104,30 @@ Then, using the response from this they ask:
     - "Which is better?"
 
 They don't generate a response here, they just look at the probability of the tokens for "1" and "2" for the answer to the first question.
+
+### LoRA - Low-Rank Adaptation of Large Language Models {#lora}
+
+[LoRA - Paper](https://arxiv.org/pdf/2309.00267.pdf)
+
+This paper details `LoRA` a more parameter efficient way of fine-tuning LLMs. When fine-tuning a set of weights, we can represent the new weights $W'$ as $W' = W + \delta W$. Typically, in fine-tuning tasks, we would modify $W$ directly, in order to obtain $W'$. However, the paper proposes that we represent $\delta W$ as a low-rank matrix, i.e. $\delta W = BA$, where $B$ and $A$ are low-rank matrices. 
+
+$A$ and $B$ are also smaller matrices, and their product $AB$ represents a `low-rank` approximation of the original matrix. A rank in matrix terms means "the number of linearly independent columns in the matrix".
+
+By choosing a low-rank approximation, the number of parameters required to train th emodel is reduced. For example, if $W$ is a $d x d$ matrix, then updating $W$ would involve $d^2$ parameters. However, with two low-rank matrices, $A$ and $B$ of sizes $d x r$ and $r x d$ respectively, we only require $2d \cdot r$ parameters, where $r$ is the rank of the matrix.
+
+There is also a good article [here](https://towardsdatascience.com/understanding-lora-low-rank-adaptation-for-finetuning-large-models-936bce1a07c6) that explains this in more detail.
+
+### QLoRA
+
+[QLoRA - Paper](https://arxiv.org/pdf/2305.14314.pdf)
+
+QLoRA builds on top of [LoRA](#lora). The main innovation is to `quantize a pretrained model to 4-bit`. This means storing tensors and performing computations with a reduced precision, in this case 4-bit "NormalFloat" - which yields better results than 4-bit ints / floats. In this case, during evaluation, they found models fine-tuned with QLoRA still regain 16-bit performance.
+
+"QLoRA improves over LoRA by quantizing the transformer model to 4-bit precision and using paged optimizers to handle memory spikes."
+
+Their LoRA approache includes adapters at every network layer and "thereby avoids almost all of the accuracy tradeoffs seen in prior work".
+
+"The memory footprint ... comes from activiation gradients and not from the learned LoRA parameters". This means the number of low-rank adapters will not affect the overall memory footprint
 
 ## The Math of LLMs
 
