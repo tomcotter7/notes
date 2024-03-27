@@ -4,3 +4,6 @@
 
 `git log --format="%ae" | head -1`
 
+## Run a command after `git push`
+
+git config alias.xpush `!git push $1 $2 && <your-command>`.
