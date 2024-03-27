@@ -4,8 +4,3 @@
 
 `git log --format="%ae" | head -1`
 
-## Hooks
-
-### Post Update
-
-The post update hook allows you to run scripts after the push has happened.
