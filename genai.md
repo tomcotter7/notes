@@ -1,4 +1,4 @@
-# Generative AI
+ Generative AI
 
 ## Prompt Engineering
 
@@ -91,6 +91,12 @@ Self-RAG is a technique to prevent unnessecary retrieval, or remove irrelevant p
 
 I believe we can use a classifier model / smaller LM to do the same thing.
 
+Youtube Video from langchain [here](https://www.youtube.com/watch?v=pbAd8O1Lvm4). Notes:
+- `Active RAG`: LLM decides when and what to retrieve.
+- In this they use `langgraph`, which essentially creates a state-machine. The model can generate the `action` it could take.
+    - How would I implement this without langchain?
+    - What benefit does langgraph add? -> I think this can be done with function calling and a custom state machine.
+
 ## Fine-Tuning
 
 ### RLAIF
@@ -128,6 +134,35 @@ QLoRA builds on top of [LoRA](#lora). The main innovation is to `quantize a pret
 Their LoRA approache includes adapters at every network layer and "thereby avoids almost all of the accuracy tradeoffs seen in prior work".
 
 "The memory footprint ... comes from activiation gradients and not from the learned LoRA parameters". This means the number of low-rank adapters will not affect the overall memory footprint
+
+### Alternatives to Fine-Tuning (That Isn't In-Context Learning)
+
+#### Prompt Tuning / Prefix Tuning
+
+Prompt Tuning v2 paper [here](https://arxiv.org/pdf/2110.07602.pdf). This is the idea of *tuning only the continuous prompts*. Specificaly, adding trainable continous embeddings to the original sequence of input word embeddings. Only these *continuous prompts* are updated during training.
+
+There are technically 3 types of prompt tuning:
+- *Hard* Prompt Tuning
+- *Soft* Prompt Tuning - This is PromptTuningV1 - where the continous trainable vector is only applied to the input embeddings.
+    - I think this is also prompt tuning v2, however in v2, they actually apply multiple continous embeddings across multiple layers. This is because the prompts in deeper layers have more of an effect on the output.
+- *Prefix-Tuning*
+
+We do this to focuse on providing inputs like, "Amazing Movie, It is [MASK]". This focusing on the way LLMs were trained which is to generate the next word of the sentence.
+
+The Prefix-Tuning can be found [here](https://arxiv.org/pdf/2101.00190.pdf), this is similar, in terms of the fact that it learns a continuous task-specific vector to prepend to the input. These vectors are added to *each* transformer block. Because they optimize over continous word embeddings, rather than discrete tokens (prompt engineering), you can get much more value, and automatic optimization.
+
+They apply a MLP to each transformer block which is of the shape: $P_{idx} X dim(h_{i})$, where $P_{idx}$ is the length of the prefix, and $dim(h_{i})$ is the dimensionality of the activation layer in the transformer block.
+
+I quite like this approach because you get a way of producing task specific vectors without having to keep copies of the LLM.
+
+### Quiet-STaR
+
+[Quiet-STaR - Paper](https://arxiv.org/pdf/2403.09629.pdf)
+
+This is a process of fine-tuning to follow a CoT type approach, by producing "thoughts" after each token, which are combined with the previous tokens to predict the next token. They call it *Quiet* because they are training the model to think before it speaks, but not neccesarily outputting the "thoughts".
+
+The start of thought and end of thought tokens are `---` as typically in text, this is used as a 'break' or 'pause'.
+
 
 ## The Math of LLMs
 
@@ -179,9 +214,6 @@ kv cache: we store the previously calculate key, value attention matrices for to
 
 [Inference Optimization](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/)
 Most interesting thing from here was *Inference Quantization*. The essentially means setting the weights to use int 8-bit precision and keeping activation at fp32 or bf16. This cuts down on the memory required to store the model, as we are using 50% of the memory per parameter.
-
-
-
 
 ## HCI / UX
 
