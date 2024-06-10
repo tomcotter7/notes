@@ -18,6 +18,12 @@ Working with LLM frameworks is annoying & the added complexity of not knowing th
 
 ## Retrieval Augmented Generation
 
+### Evaluation
+
+#### C-RAG
+
+[Paper](https://arxiv.org/pdf/2406.04744) describes a detailed dataset for evaluating RAG systems. It also contains 'mock' APIs for KGs & Web Search retrieval in order to test that.
+
 ### Retrieval
 
 #### Is Cosine Similarity of Embeddings Really About Similarity?
@@ -138,6 +144,14 @@ Their LoRA approache includes adapters at every network layer and "thereby avoid
 
 "The memory footprint ... comes from activiation gradients and not from the learned LoRA parameters". This means the number of low-rank adapters will not affect the overall memory footprint
 
+### GaLore
+
+[GaLore - Paper](https://arxiv.org/pdf/2403.03507)
+
+This is a fine-tuning / pre-training method similar to LoRa / QLoRa in the sense that it uses Low-Rank matrics to approximate certain states when fine-tuning. However, LoRA and QLora represents the "change" in the weights as a low-rank matrix, whereas GaLore represents the gradients for each Weight as a low-rank matrix. 
+
+[This yt video](https://www.youtube.com/watch?v=VC9NbOir7q0) explains the concept well. However, GaLore is essentially more memory efficient that LoRA (and more accurate because this matrix is actually low rank, rather than being approximated by a low-rank matrix).
+
 ### Alternatives to Fine-Tuning (That Isn't In-Context Learning)
 
 #### Prompt Tuning / Prefix Tuning
@@ -199,6 +213,12 @@ This is done for each word, which can obviously be performed in paralell. After 
 #### Multi-Head Attention
 
 This scaled dot product attetention previously mentioned is 1-head attention. Multi-head attention is just this with different $q, k, v$ matrices. This means we can attend to different parts of the sequence different. Again this can be done in parallel.
+
+### Scalable MatMul-free Language Modelling
+
+[This paper](https://arxiv.org/pdf/2406.02528) details how MatMul operations (the expensive ops that require GPUs) can be eliminated from language models entirely.
+
+However, the title is slightly misleading. Essentially, all the weights in the model have been constrained to be ternary - i.e in the set { -1, 0, 1 }. By doing this, it simplifies any equation that looks like $ y = xW_{i} $ (i.e a vector-matrix multiplication) into a element wise product (hadamard product). They also remove the attention layer, and replace it with something similar to a RNN that can be parallelized.
 
 ## LLM Inference
 
