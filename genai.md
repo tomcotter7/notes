@@ -126,18 +126,32 @@ This scaled dot product attetention previously mentioned is 1-head attention. Mu
 
 ## LLM Architectures
 
-### Mamba2
-
-[Tri Dao's Blog on the Mamba2 Release](https://tridao.me/blog/2024/mamba2-part1-model/)
-The Mamba2 paper tries to combine the efficiency of Attention with the original State Space Model (SSM) - Mamba1. The SSM defines a map from $x \in R^{T} -> y \in R^{T}$. 
-
 ### Scalable MatMul-free Language Modelling
 
 [This paper](https://arxiv.org/pdf/2406.02528) details how MatMul operations (the expensive ops that require GPUs) can be eliminated from language models entirely.
 
 However, the title is slightly misleading. Essentially, all the weights in the model have been constrained to be ternary - i.e in the set { -1, 0, 1 }. By doing this, it simplifies any equation that looks like $ y = xW_{i} $ (i.e a vector-matrix multiplication) into a element wise product (hadamard product). They also remove the attention layer, and replace it with something similar to a RNN that can be parallelized.
 
+## LLM Papers & Models
 
+### Mamba2
+
+[Tri Dao's Blog on the Mamba2 Release](https://tridao.me/blog/2024/mamba2-part1-model/)
+The Mamba2 paper tries to combine the efficiency of Attention with the original State Space Model (SSM) - Mamba1. The SSM defines a map from $x \in R^{T} -> y \in R^{T}$. 
+
+### NemoTron-4 340B
+
+[Paper](https://d1qx31qr3h6wln.cloudfront.net/publications/Nemotron_4_340B_8T_0.pdf).
+
+This is the Nvidia model with 340B parameters. Notably, over 98% of the data used in the model alignment process is synthetically generated. Nvidia have released Nemotron-4-340B-Reward for helping label synthetically generated data (i.e. curate it to be high quality).
+
+To generate the synthetic data, they had to create a prompt. They had 3 types of prompts:
+
+- Single-Turn Prompts - they basically took a bunch of topics (i.e. ML, Geography, etc..) and generated data given a either a topic or a topic and some data (i.e summarize this paper).
+- Instruction Following Prompts - e.g "Write an essay, your response should have three paragraphs". Specifically, the for each prompt ("Write an essay"), they randomly selected an instruction ("your response should have three paragraphs") from the verifiable prompt templates.
+- Two-Turn Prompts - These are prompts that require the model to generate a response to a question, and then generate a response to a follow-up question. The follow-up question is generated based on the response to the first question. This is of the form "User: XXX, Assistant: XXX, User: XXX", where the XXX would be synthetic data.
+
+They also used LLM as a Judge to compare the responses to the prompt. One cool trick they used to avoid positiional bias was to ask the LLM twice, swapping the order of the responses. If the LLM gave the same response twice, it was considered to be a good response.
 
 ## LLM Inference
 

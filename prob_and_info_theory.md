@@ -75,3 +75,88 @@ For two variable to have zero covariance, there must be no linear dependence bet
 
 The covariance matrix of a random vector $x \in R^n$ is an $n x n$ matrix, such that - $Cov(x)_{i, j} = Cov(x_i, x_j)$. The diagonal elements of the covariance give the variance of each element of x, $Cov(x_i, x_i) = Var(x_i)$.
 
+## Common Probability Distributions
+
+### Bernoulli Distribution
+
+The Bernoulli distribution is a distribution over a single binary random variable. It is controlled by a single parameter $\phi \in [0, 1]$, which gives the probability of the random variable being equal to 1.
+
+### Multinoulli Distribution
+
+The multinoulli, or categorical, distribution is a distribution over a single discrete variable with k different states, where k is finite.
+
+### Gaussian Distribution
+
+Also known as the normal distribution.
+
+$\mathcal{N}(x; \mu, \sigma^2) = \sqrt(\frac{1}{2\pi\sigma^2})exp(-\frac{1}{2\sigma^2}(x - \mu)^2)$.
+
+The two params, $\mu$ and $\sigma^2$, are the mean and variance of the distribution. The $\mu$ gives the co-ordinate of the central peak, this is also the mean of the distribution: $E[x] = \mu$.
+
+When we evaluate the PDF, we need to square and invert $\sigma$. If we are repeatedly doing this, a more efficient way is to use a parameter $\Beta \in (0, \infty)$ to control the precision (or inverse variance) of the distribution:
+
+$\mathcal{N}(x; \mu, \Beta^{-1}) = \sqrt(\frac{\Beta}{2\pi})exp(-\frac{\Beta}{2}(x - \mu)^2)$.
+
+Out of all possible probability distributions with the same variance, the normal distribution encodes the maximum amount of uncertainty over the real numbers. We can thus think of the normal distribution as the one that puts the least amount of prior knowledge into the model.
+
+The normal distribution generalizes to $R^n$ as the multivariate normal distribution.It may be parameterized with a positive definite symmetric matrix $\Sigma$, which is the covariance matrix of the distribution.
+
+$\mathcal{N}(x; \mu, \Sigma) = \sqrt(\frac{1}{(2\pi)^n|\Sigma|})exp(-\frac{1}{2}(x - \mu)^T\Sigma^{-1}(x - \mu))$.
+
+Since the covariance matrix is not a computationally efficient wy to parameterize the distribution, we use the precision matrix $\Beta$ instead:
+
+$\mathcal{N}(x; \mu, \Beta^{-1}) = \sqrt(\frac{det(\Beta)}{(2\pi)^n})exp(-\frac{1}{2}(x - \mu)^T\Beta(x - \mu))$.
+
+### Exponential and Laplace Distributions
+
+The exponential distribution has a sharp point at x = 0.
+
+$p(x; \lambda) = \lambda 1_{x \geq 0}exp(-\lambda x)$.
+
+The indicator function $1_{x \geq 0}$ assigns a probability of 0 to all negative values of x (and 1 to all non-negative values). 
+
+The Laplace distribution allows us to place a sharp peak of probability mass at an arbitrary point $\mu$.
+
+$Laplace(x; \mu, \gamma) = \frac{1}{2\gamma}exp(-\frac{|x - \mu|}{\gamma})$.
+
+### The Dirac Distribution and Empirical Distribution
+
+In some cases, we wish to specify that all the mass in a probability distribution clusters around a single point. We can do thi with a Dirac delta function $\delta(x)$: $p(x) = \delta(x - \mu)$.
+
+The Dirac delta function is defined such that it is zero valued everywhere except 0, yet integrates to 1.
+
+A common use of the Dirac delta distribution is as a component of an empirical distribution. $p(x) = \frac{1}{m}\sum_{i=1}^{m}\delta(x - x^{(i)})$. This puts probability mass 1/m at each of the points $x^{(i)}$. You can imagine an empirical distribution as essential a training set.
+
+### Mixtures of Distributions
+
+You can combine distributions to construct a mixture distribution. On each trial, the choice of which component distribution should generate the sample is determined by sampling a component identity from a multinoulli distribution:
+
+$P(x) = \sum_{i}P(c = i)P(x | c = i)$, where $P(c)$ is the multinoulli distribution over the component identities. The empirical distribution is a special case of a mixture distribution, as it is a mixture of Dirac delta functions.
+
+## Bayes Rule
+
+$P(x | y) = \frac{P(y | x)P(x)}{P(y)}$.
+
+## Information Theory
+
+THe basic intuition behind information theory is that learning that an unlikely event has occurred is more informative than learning that a likely event has occurred.
+
+- Likely events should have low information content, and in the extreme case, events that are guaranteed to happen should have no information content whatsoever.
+- Less likely events should have higher information content.
+- Independent events should have additive information. For example, finding out that a tossed coin has come up heads twice should convey twice as much information as finding out that a tossed coin has come up heads once.
+
+The self-information of an event x = x is: $I(x) = -logP(x)$. In ML, we use the natural logarithm, and as such the information is measured in "nats". One nat is the amount of information gained by observing an event of probability $\frac{1}{e}$.
+
+Self-information deals with a single outcome. We can quantify the amount of uncertainty in an entire probability distribution using the Shannon entropy: $H(x) = E_{x \sim P}I(x) = -E_{x \sim P}logP(x)$. In other words, the Shannon entropy of a distribution is the expected amount of information in an event drawn from that distribution. 
+
+If we have two separate probability distributions $P(x)$ and $Q(x)$ over the same random variable x, we can measure how different these two distributions are using the Kullback-Leibler (KL) divergence: $D_{KL}(P||Q) = E_{x \sim P}[log\frac{P(x)}{Q(x)}] = E_{x \sim P}[logP(x) - logQ(x)]$. The KL divergence is not symmetric, $D_{KL}(P||Q) \neq D_{KL}(Q||P)$. It is defined as the extra amount of information needed to send a message containing symbols drawn from P when we use a code that was designed to minimize the length of messages drawn from Q.
+
+Cross-Entropy is $H(P, Q) = H(P) + D_{KL}(P||Q)$. Or more simply, $H(P, Q) = -E_{x \sim P}logQ(x)$.
+
+## Structured Probabilistic Models
+
+Instead of using a single function to represent a probability distribution, we can split a probability distribution into many factors that we multiply together. For example, suppose we have three random variables: a, b & c. Supposes that a influences b, and b influences c, but that a and c are independent given b. We can represent this as: $P(a, b, c) = P(a)P(b | a)P(c | b)$. We can greatly reduce the cost of representing a distribution  if we are able to find a factorization into distributions over fewer variables. We can describe these factorizations with graphs (creating structure probabilistic models).
+
+Directed models use graphs with directed edges & represent factorizations into conditional probability distributions. $p(x) = \prod_{i}p(x_i | Pa_{\mathcal{g}}(x_i))$. The parents of a node are the nodes with edges pointing directly into that node.
+
+Undirected models represent factorizations into a set of functions; these functions are not probability distributions of any kind. Any set of nodes that are all connected to each other in the graph is called a "clique".
