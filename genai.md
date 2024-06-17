@@ -91,7 +91,7 @@ This is a process of fine-tuning to follow a CoT type approach, by producing "th
 The start of thought and end of thought tokens are `---` as typically in text, this is used as a 'break' or 'pause'.
 
 
-## The Math of LLMs
+## LLM Core Concepts
 
 ### Attention
 
@@ -124,11 +124,20 @@ This is done for each word, which can obviously be performed in paralell. After 
 
 This scaled dot product attetention previously mentioned is 1-head attention. Multi-head attention is just this with different $q, k, v$ matrices. This means we can attend to different parts of the sequence different. Again this can be done in parallel.
 
+## LLM Architectures
+
+### Mamba2
+
+[Tri Dao's Blog on the Mamba2 Release](https://tridao.me/blog/2024/mamba2-part1-model/)
+The Mamba2 paper tries to combine the efficiency of Attention with the original State Space Model (SSM) - Mamba1. The SSM defines a map from $x \in R^{T} -> y \in R^{T}$. 
+
 ### Scalable MatMul-free Language Modelling
 
 [This paper](https://arxiv.org/pdf/2406.02528) details how MatMul operations (the expensive ops that require GPUs) can be eliminated from language models entirely.
 
 However, the title is slightly misleading. Essentially, all the weights in the model have been constrained to be ternary - i.e in the set { -1, 0, 1 }. By doing this, it simplifies any equation that looks like $ y = xW_{i} $ (i.e a vector-matrix multiplication) into a element wise product (hadamard product). They also remove the attention layer, and replace it with something similar to a RNN that can be parallelized.
+
+
 
 ## LLM Inference
 
@@ -148,6 +157,12 @@ kv cache: we store the previously calculate key, value attention matrices for to
 [Inference Optimization](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/)
 Most interesting thing from here was *Inference Quantization*. The essentially means setting the weights to use int 8-bit precision and keeping activation at fp32 or bf16. This cuts down on the memory required to store the model, as we are using 50% of the memory per parameter.
 
+## Training Models
+
+### Data Collection
+
+[Here](https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1) is a good resource on a how a high quality training dataset for LLMs can be created.
+
 ## HCI / UX
 
 *Good tools make it clear how they should be used*. LLM's should not be chatbot interfaces with complex prompts, sliders for different settings should be used, i.e. competency with a topic, how verbose a response. Find an in depth article [here](https://wattenberger.com/thoughts/boo-chatbots).
@@ -155,9 +170,3 @@ Most interesting thing from here was *Inference Quantization*. The essentially m
 ## Resources
 
 - [ML Papers of Week](https://github.com/dair-ai/ML-Papers-of-the-Week)
-
-## Training
-
-### Data Collection
-
-[Here](https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1) is a good resource on a how a high quality training dataset for LLMs can be created.

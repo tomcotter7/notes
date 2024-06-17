@@ -7,3 +7,8 @@
 ## Run a command after `git push`
 
 git config alias.xpush `!git push $1 $2 && <your-command>`.
+
+## Checkout to remote branch
+
+`git fetch`
+`git switch <remote-branch-name>`

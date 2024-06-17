@@ -7,6 +7,8 @@
 
 ## Ownership
 
+[Full Details Here](https://www.youtube.com/watch?v=9ag0fPMmYPQ)
+
 ```mojo
 fn b(borrowed x: String):
     # x is initialized
@@ -20,4 +22,15 @@ fn b(inout x: String):
 fn b(owned x: String):
     # x is initialized
     # x is destroyed at the end of the function if it is not transferred.
+```
 
+```mojo
+
+fn __moveinit__(inout self: Self, owned other: Self):
+    # you "poach" the fields from owned into self.
+    # other is destroyed at the end of the function.
+```
+
+## Mojo Benchmarks (vs. Python)
+
+- Benchmarks revealed that Mojo has superior performance to Python in small, fixed-size matrix multiplications, attributing the speed to the high overhead of Python's numpy for such tasks.
