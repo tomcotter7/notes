@@ -132,12 +132,12 @@ This scaled dot product attetention previously mentioned is 1-head attention. Mu
 
 However, the title is slightly misleading. Essentially, all the weights in the model have been constrained to be ternary - i.e in the set { -1, 0, 1 }. By doing this, it simplifies any equation that looks like $ y = xW_{i} $ (i.e a vector-matrix multiplication) into a element wise product (hadamard product). They also remove the attention layer, and replace it with something similar to a RNN that can be parallelized.
 
-## LLM Papers & Models
-
 ### Mamba2
 
 [Tri Dao's Blog on the Mamba2 Release](https://tridao.me/blog/2024/mamba2-part1-model/)
 The Mamba2 paper tries to combine the efficiency of Attention with the original State Space Model (SSM) - Mamba1. The SSM defines a map from $x \in R^{T} -> y \in R^{T}$. 
+
+## LLM Papers & Models
 
 ### NemoTron-4 340B
 
@@ -161,6 +161,15 @@ They managed to show a "self-improving" flywheel of data generation, where each 
 
 They used **Retrieve-Aware training**, which means finetuning the model with the same text that is appended to the input during inference (w/ RAG).
 
+### MoA
+
+[MoA](https://www.together.ai/blog/together-moa) is **M**ixture **o**f **A**gents. Their hypothesis is that "LLMs tend to generate better responses when presented with outputs from other models, even if these other models are less capable on their own.
+
+They split up the models into *Proposers* & *Aggregators*:
+    - Proposers generate initial reference responses.
+    - Aggregators synthesize the different response from the proposers into a single, high-quality response.
+
+It is essentially multiple models working in tandem.
 
 ## LLM Inference
 
