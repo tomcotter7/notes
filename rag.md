@@ -19,6 +19,14 @@ They found that BM25 outperforms embedding models for the re-ranking use case - 
 The metrics they used were:
 - [nDCG@k](https://en.wikipedia.org/wiki/Discounted_cumulative_gain) - Normalized Discounted Cumulative Gain, k is the number of documents to consider - i.e. the top-k documents. The also looked at recall - which is useful when you have multiple "correct/relevant" answers.
 
+### Luna: An Evaluation Foundation Model to Catch Language Model Hallucinations
+
+[Paper](https://arxiv.org/pdf/2406.00975)
+
+Luna is a model fine-tuned for hallucination detection in RAG settings. The point is the model may still hallucinate even when provided with the correct knowledge. Luna (440M parameters) can mitigate that. It also works with long-context RAG.
+
+Finetuned DeBERTa-v3-Large model with a shallow hallucination classifier on each response token. It's trained on the task of identifying supported tokens in the response, given a query and retrieved context.
+
 ## Retrieval
 
 ### Is Cosine Similarity of Embeddings Really About Similarity?
@@ -103,7 +111,7 @@ Youtube Video from langchain [here](https://www.youtube.com/watch?v=pbAd8O1Lvm4)
 
 ## Frameworks
 
-## FlashRAG
+### FlashRAG
 
 [Paper](https://arxiv.org/pdf/2405.13576)
 [GitHub](https://github.com/RUC-NLPIR/FlashRAG)

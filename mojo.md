@@ -34,3 +34,7 @@ fn __moveinit__(inout self: Self, owned other: Self):
 ## Mojo Benchmarks (vs. Python)
 
 - Benchmarks revealed that Mojo has superior performance to Python in small, fixed-size matrix multiplications, attributing the speed to the high overhead of Python's numpy for such tasks.
+
+## Numerical Operations
+
+[NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo/tree/main)
