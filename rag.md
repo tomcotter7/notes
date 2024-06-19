@@ -125,3 +125,9 @@ The metrics they are using (as of 12/06/2024) are:
 - 'sub_em': Substring Exact Match
 - 'precision': Precision
 - 'recall': Recall
+
+## Resources
+
+## Applied LLMs
+
+[Article](https://applied-llms.org/)
