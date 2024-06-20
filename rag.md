@@ -29,6 +29,12 @@ Finetuned DeBERTa-v3-Large model with a shallow hallucination classifier on each
 
 ## Retrieval
 
+### augmented-SBERT
+
+This [paper](https://arxiv.org/pdf/2010.08240) details a powerful method of finetuning bi-encoders. Essentially, they create a labelled dataset using a cross-encoder, which then can be used to fine-tune a bi-encoder.
+
+Cross-Encoders can be finetuned with less data as well, so this is the typical method for adapting the retrieval models to a specific domain.
+
 ### Is Cosine Similarity of Embeddings Really About Similarity?
 
 [Paper](https://arxiv.org/pdf/2403.05440.pdf). In this paper they derive analytically that cosine-similarity can yield arbitrary and therefore meaningless `similarities`, this is even true for deep learned embeddings (such as the ones used in RAG). Cosine similarity has become popular under the motiviation that the norm of the vecotrs is not as important as the directional alignment between the vectors.
@@ -36,7 +42,6 @@ Finetuned DeBERTa-v3-Large model with a shallow hallucination classifier on each
 The reason they found that cosine similarity can be arbitrary is "We find that the underlying reason is not cosine similarity itself, but the fact that the learned embeddings have a degree of freedom that can render arbitrary cosine-similarities even though their (unnormalized) dot-products are well-defined and unique.".
 
 The paper defines matrix factorization weirdly, [here](https://developers.google.com/machine-learning/recommendation/collaborative/matrix) is a better explanation.
-
 
 ### Vector Databases
 
