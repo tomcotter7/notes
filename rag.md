@@ -29,6 +29,24 @@ Finetuned DeBERTa-v3-Large model with a shallow hallucination classifier on each
 
 ## Retrieval
 
+### BM-42
+
+BM-42 is a variant of BM25, introduced by Qdrant [here](https://qdrant.tech/articles/bm42/). It's a version of BM25 more suited to RAG applications.
+
+Why is BM25 bad? BM25 is not good at handling short documents, because we check both the number of times a word appears in a document; and the length of the document compared to the average document length. The intuition behind this is that if the word appears in a shorter document, the word is more important to that document. If we are chunking the documents into even sized chunks for dense retrieval, this term is not useful.
+
+BM25 = IDF * Term Importance in Document. 
+
+Therefore, the only relevant term in BM25 is IDF. IDF essentially means the more rare a term is, the more important it is. BM42 is a combination of attention scores and IDF score. Given an attention matrix, if we take the first row of the matrix, (i.e the [CLS] row) it tells us the importance of each term in the document. By taking the attention scores of the [CLS] token, we can look at the attention score for each term in the query. This determines if the term is relevant to the document or not.
+
+This is a useful alternative to BM25, but should be used in conjunction with a dense search.
+
+### GISTEmbed
+
+This [paper](https://arxiv.org/pdf/2402.16829) details a method on collecting negatives for text embedding fine-tuning. It uses a guide model to enhance in-batch negative selection.
+
+They use large & high performing embedding models to finetune smaller embedding models. So, given a (Q, P) pair, they sample the entire batch for negatives, then use the guide model to filter out any "negatives" with a higher similarity to Q than P. This means you can finetune a model with just (Q, P) pairs, and not have to worry about collecting negatives.
+
 ### augmented-SBERT
 
 This [paper](https://arxiv.org/pdf/2010.08240) details a powerful method of finetuning bi-encoders. Essentially, they create a labelled dataset using a cross-encoder, which then can be used to fine-tune a bi-encoder.
