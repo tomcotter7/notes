@@ -29,6 +29,12 @@ Finetuned DeBERTa-v3-Large model with a shallow hallucination classifier on each
 
 ## Retrieval
 
+### RankRAG
+
+This [paper](https://arxiv.org/pdf/2407.02485v1) describes a method of finetuning a (large) language model to do reranking & answer synthesis in one step.
+
+It outperforms off the shelf language models & cross-encoder models designed to do reranking (at the cost of being 80b parameters - the 8b param one performs at a similar level). I do like the idea of simulatenously reranking and generation - it's a more efficient way of doing things.
+
 ### BM-42
 
 BM-42 is a variant of BM25, introduced by Qdrant [here](https://qdrant.tech/articles/bm42/). It's a version of BM25 more suited to RAG applications.
