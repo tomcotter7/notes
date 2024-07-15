@@ -18,6 +18,12 @@ Working with LLM frameworks is annoying & the added complexity of not knowing th
 
 ## Fine-Tuning
 
+### Few-Shot PEFT is Better and Cheaper than In-Context Learning
+
+[This paper](https://arxiv.org/pdf/2205.05638) discuss and shows that ICL is a) too expensive when adding lots of examples and b) does not provide enough benefit.
+
+Given some general task (like doing CoT prompting, or Q&A over a document set) is it more efficient to finetune a model to act this way, rather than provide examples in the prompt.
+
 ### RLAIF
 
 [RLAIF - Paper](https://arxiv.org/pdf/2309.00267.pdf)

@@ -1,5 +1,13 @@
 # Retrieval Augmented Generation
 
+## Q&A
+
+### RAFT
+
+[This paper](https://arxiv.org/pdf/2403.10131) details RAFT, a technique in which languages models are finetuned to ignore text which does not help them with the answer.
+
+They essentially finetune models to respond with a 'chain-of-thought' style response, that allows the models to avoid $D_i$ distractor documents and only focus on $D*$ the relevant document.
+
 ## Evaluation
 
 ### C-RAG
@@ -46,6 +54,8 @@ BM25 = IDF * Term Importance in Document.
 Therefore, the only relevant term in BM25 is IDF. IDF essentially means the more rare a term is, the more important it is. BM42 is a combination of attention scores and IDF score. Given an attention matrix, if we take the first row of the matrix, (i.e the [CLS] row) it tells us the importance of each term in the document. By taking the attention scores of the [CLS] token, we can look at the attention score for each term in the query. This determines if the term is relevant to the document or not.
 
 This is a useful alternative to BM25, but should be used in conjunction with a dense search.
+
+NOTE: This was proved to be a false result. They have since corrected it, but it now performs on par with BM25.
 
 ### GISTEmbed
 
