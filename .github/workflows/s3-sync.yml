@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: custom local action
-      uses: tomcotter7/gptcotts-github-action@v0.0.1-alpha
+      uses: tomcotter7/gptcotts-github-action@main
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
