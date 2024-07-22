@@ -1,4 +1,4 @@
- Generative AI
+# Generative AI
 
 ## Prompt Engineering
 
@@ -12,92 +12,17 @@ A [paper](https://arxiv.org/pdf/2312.16171v1.pdf) with 26 different prompting te
 
 The authors argue that prompt engineering is brittle, and akin to manually finetuning weights on a classifier. This abstracts LM pipelines as *text transformation graphs*. These can be automatically optimised for better results. From the paper "DSPy contributes three abstractions toward automatic optimization: signatures, modules, and teleprompters. Signatures abstract the input/output behavior of a module; modules replace existing hand-prompting techniques and can be composed in arbitrary pipelines; and teleprompters optimize all modules in the pipeline to maximize a metric.". Prompts go from 'You are an AI assistant ....' to 'question -> answer'. Teleprompters are powerful optimizers (included in DSPy) that can learn to bootstrap and select effective prompts for the modules of any program. (The "tele-" in the name means "at a distance", i.e., automatic prompting at a distance.)
 
+### F*ck you, show me the prompt
 
-## Retrieval Augmented Generation
-
-### Retrieval
-
-#### Is Cosine Similarity of Embeddings Really About Similarity?
-
-[Paper](https://arxiv.org/pdf/2403.05440.pdf). In this paper they derive analytically that cosine-similarity can yield arbitrary and therefore meaningless `similarities`, this is even true for deep learned embeddings (such as the ones used in RAG). Cosine similarity has become popular under the motiviation that the norm of the vecotrs is not as important as the directional alignment between the vectors.
-
-The reason they found that cosine similarity can be arbitrary is "We find that the underlying reason is not cosine similarity itself, but the fact that the learned embeddings have a degree of freedom that can render arbitrary cosine-similarities even though their (unnormalized) dot-products are well-defined and unique.".
-
-The paper defines matrix factorization weirdly, [here](https://developers.google.com/machine-learning/recommendation/collaborative/matrix) is a better explanation.
-
-
-#### Vector Databases
-
-Multi-Tenancy or Role-Based Access Control (RBAC) can be implemented using metadata filtering. There is blog post by Q-drant on this [here](https://qdrant.tech/documentation/tutorials/llama-index-multitenancy/)
-
-#### Sentence Window Retrieval
-
-Sentence Window Retrieval. When indexing, we provide the ids of the 'chunks' that are either side of the current chunk. We use the ids instead of the chunks themselves, to not increase storage costs, and fetching the chunks based on ids is very quick.
-
-This is a benefit because we can keep embeddings small, i.e similar to the query, but sitll provide lot's of context to the LLM.
-
-#### RAPTOR
-
-[RAPTOR - Recurse Abstractive Processing for Tree-Organized Retrieval](https://arxiv.org/pdf/2401.18059.pdf)
-RAPTOR is an approach of embedding document(s) in a `tree-like` structure, and summarizing the child nodes at each level. This allows for a both a `fine-grained` retrieval and a more abstract retrieval. So, this means we can retrieval answers to very specific queries, but also more general queries, like `Tell me about the 5 upgrades listed in the document`.
-
-Process:
-    - Chunk the document into N chunks.
-    - Cluster the chunks using a clustering algorithm based on Gaussian Mixture Models (GMM).
-        - They are using `soft clustering` here, which means that each chunk can belong to multiple clusters.
-    - For each cluster, they summarize the chunks in the cluster.
-    - Repeat the process for the summarized chunks, until we have a single summary.
-
-For retrieval, they have two processes. Either, they query the tree level by level, taking the `top-k` chunks at each level. Or, they collapse the tree and do traditional retrieval methods obtaining the most similar chunks.
-
-Since the embedding vectors have a high dimensionality, they use Uniform Manifold Approximation and Projection (UMAP) to reduce the dimensionality of the vectors, this results in better performance. As of 14/03/2024, they are ranked 3rd on the QuALITY benchmark, found [here](https://paperswithcode.com/sota/question-answering-on-quality?p=raptor-recursive-abstractive-processing-for).
-
-#### Fusion / Hybrid Retrieval
-
-We can use both a dense vector search (produced by an embedding model) and a sparse vector search (produced by a model like BM-25, which uses TF-IDF). We can then combine the results of both searches to produce a better result. These can be combined using RRF.
-
-#### Reciprocal Rank Fusion (RRF)
-
-RRF simply sorts the documents according to a naive scoring formula. Given a set of $D$ documents , and a set of rankings $R$, we can compute: $RRFScore(d \in D) = \Sigma_{r \in R} \frac{1}{k + r(d)}$. This is then used to sort the documents.
-
-We can use this to combine the results of multiple queries.
-
-#### Query Transformation
-
-**Sub Query Transformation**. This means using an LLM to break a query down into multiple sub-queries if required. For example, "Which has more Github stars, Langchain or LlamaIndex?", can be broken down into "How many Github stars does Langchain have?" and "How many Github stars does LlamaIndex have?", then the results can be combined.
-
-#### Knowledge Graphs for RAG
-
-Neo4j offers built in `vector indexes`, which can be used to store embeddings. Once we have the `top-n` documents, we can grab the surrounding documents in the knowledge graph and use them as context for the LLM. See [here](https://neo4j.com/docs/cypher-manual/current/indexes/semantic-indexes/vector-indexes/)
-
-How to build these KGs?
-    - In the basic course, they define 2 relationship, "NEXT" & "PART-OF", where "NEXT" links chunks to chunks and "PART-OF" links chunks to documents.
-    - They also create a relationship "FIRST" which links the first chunk of a section to the section.
-
-The true power would come from using a more complex KG, with relationship that have more meaning. 
-
-#### Self-RAG
-
-Self-RAG is a technique to prevent unnessecary retrieval, or remove irrelevant passages from the retrieved documents if required. In the [paper](https://arxiv.org/pdf/2310.11511.pdf), they train their own LM to do this. The steps are as folows:
-
-- For a given input $x$, they generate a response $y$.
-- Then, they generate a single token given $x$ and $y$ to determine if retrieval is required, collecting the documents $d$.
-- Given $x$, $y$ and $d$, they generate 3 `reflection` tokens
-    - (1) IsRel - whether the document $d_i$ is relevant to the input $x$.
-    - (2) IsSup - whether the document $d_i$ fully supports, partially supports or does not support the output $y$.
-    - (3) IsUseful - how useful the response $y$ is to the input $x$.
-
-(1) is generated first, then $y$ would be updated. Then (2) and (3) would be generated to determine what to do with the output $y$.
-
-I believe we can use a classifier model / smaller LM to do the same thing.
-
-Youtube Video from langchain [here](https://www.youtube.com/watch?v=pbAd8O1Lvm4). Notes:
-- `Active RAG`: LLM decides when and what to retrieve.
-- In this they use `langgraph`, which essentially creates a state-machine. The model can generate the `action` it could take.
-    - How would I implement this without langchain?
-    - What benefit does langgraph add? -> I think this can be done with function calling and a custom state machine.
+Working with LLM frameworks is annoying & the added complexity of not knowing the prompt or how many API calls are being made is annoying. [This blog post](https://hamel.dev/blog/posts/prompt/) details a library `mitmproxy` that can be used to intercept the API clalls, so you can determine exactly what is going on under the hood. The blog post also describes how current frameworks implement the "magic of LLMs". These include: `guardrails`, `guidance`, `langchain`, `instructor` & `dspy`.
 
 ## Fine-Tuning
+
+### Few-Shot PEFT is Better and Cheaper than In-Context Learning
+
+[This paper](https://arxiv.org/pdf/2205.05638) discuss and shows that ICL is a) too expensive when adding lots of examples and b) does not provide enough benefit.
+
+Given some general task (like doing CoT prompting, or Q&A over a document set) is it more efficient to finetune a model to act this way, rather than provide examples in the prompt.
 
 ### RLAIF
 
@@ -135,6 +60,14 @@ Their LoRA approache includes adapters at every network layer and "thereby avoid
 
 "The memory footprint ... comes from activiation gradients and not from the learned LoRA parameters". This means the number of low-rank adapters will not affect the overall memory footprint
 
+### GaLore
+
+[GaLore - Paper](https://arxiv.org/pdf/2403.03507)
+
+This is a fine-tuning / pre-training method similar to LoRa / QLoRa in the sense that it uses Low-Rank matrics to approximate certain states when fine-tuning. However, LoRA and QLora represents the "change" in the weights as a low-rank matrix, whereas GaLore represents the gradients for each Weight as a low-rank matrix. 
+
+[This yt video](https://www.youtube.com/watch?v=VC9NbOir7q0) explains the concept well. However, GaLore is essentially more memory efficient that LoRA (and more accurate because this matrix is actually low rank, rather than being approximated by a low-rank matrix).
+
 ### Alternatives to Fine-Tuning (That Isn't In-Context Learning)
 
 #### Prompt Tuning / Prefix Tuning
@@ -164,7 +97,7 @@ This is a process of fine-tuning to follow a CoT type approach, by producing "th
 The start of thought and end of thought tokens are `---` as typically in text, this is used as a 'break' or 'pause'.
 
 
-## The Math of LLMs
+## LLM Core Concepts
 
 ### Attention
 
@@ -197,6 +130,53 @@ This is done for each word, which can obviously be performed in paralell. After 
 
 This scaled dot product attetention previously mentioned is 1-head attention. Multi-head attention is just this with different $q, k, v$ matrices. This means we can attend to different parts of the sequence different. Again this can be done in parallel.
 
+## LLM Architectures
+
+### Scalable MatMul-free Language Modelling
+
+[This paper](https://arxiv.org/pdf/2406.02528) details how MatMul operations (the expensive ops that require GPUs) can be eliminated from language models entirely.
+
+However, the title is slightly misleading. Essentially, all the weights in the model have been constrained to be ternary - i.e in the set { -1, 0, 1 }. By doing this, it simplifies any equation that looks like $ y = xW_{i} $ (i.e a vector-matrix multiplication) into a element wise product (hadamard product). They also remove the attention layer, and replace it with something similar to a RNN that can be parallelized.
+
+### Mamba2
+
+[Tri Dao's Blog on the Mamba2 Release](https://tridao.me/blog/2024/mamba2-part1-model/)
+The Mamba2 paper tries to combine the efficiency of Attention with the original State Space Model (SSM) - Mamba1. The SSM defines a map from $x \in R^{T} -> y \in R^{T}$. 
+
+## LLM Papers & Models
+
+### NemoTron-4 340B
+
+[Paper](https://d1qx31qr3h6wln.cloudfront.net/publications/Nemotron_4_340B_8T_0.pdf).
+
+This is the Nvidia model with 340B parameters. Notably, over 98% of the data used in the model alignment process is synthetically generated. Nvidia have released Nemotron-4-340B-Reward for helping label synthetically generated data (i.e. curate it to be high quality).
+
+To generate the synthetic data, they had to create a prompt. They had 3 types of prompts:
+
+- Single-Turn Prompts - they basically took a bunch of topics (i.e. ML, Geography, etc..) and generated data given a either a topic or a topic and some data (i.e summarize this paper).
+- Instruction Following Prompts - e.g "Write an essay, your response should have three paragraphs". Specifically, the for each prompt ("Write an essay"), they randomly selected an instruction ("your response should have three paragraphs") from the verifiable prompt templates.
+- Two-Turn Prompts - These are prompts that require the model to generate a response to a question, and then generate a response to a follow-up question. The follow-up question is generated based on the response to the first question. This is of the form "User: XXX, Assistant: XXX, User: XXX", where the XXX would be synthetic data.
+
+They also used LLM as a Judge to compare the responses to the prompt. One cool trick they used to avoid positiional bias was to ask the LLM twice, swapping the order of the responses. If the LLM gave the same response twice, it was considered to be a good response.
+
+They managed to show a "self-improving" flywheel of data generation, where each model would generate data, train a new model, ggenerate data, train a new model, etc...
+
+### Gorilla 
+
+[Gorilla](https://arxiv.org/pdf/2305.15334) is a model specifically designed to interact with APIs - i.e a model designed to be an agent. Gorilla is a finetuned 7B Llama model, specifically over APIs for TorchHub, TensorHub & HuggingFace. They generated 16,450 (instruction, API) pairs, these instructions were generated by GPT-4.
+
+They used **Retrieve-Aware training**, which means finetuning the model with the same text that is appended to the input during inference (w/ RAG).
+
+### MoA
+
+[MoA](https://www.together.ai/blog/together-moa) is **M**ixture **o**f **A**gents. Their hypothesis is that "LLMs tend to generate better responses when presented with outputs from other models, even if these other models are less capable on their own.
+
+They split up the models into *Proposers* & *Aggregators*:
+    - Proposers generate initial reference responses.
+    - Aggregators synthesize the different response from the proposers into a single, high-quality response.
+
+It is essentially multiple models working in tandem.
+
 ## LLM Inference
 
 ### Math
@@ -215,6 +195,12 @@ kv cache: we store the previously calculate key, value attention matrices for to
 [Inference Optimization](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/)
 Most interesting thing from here was *Inference Quantization*. The essentially means setting the weights to use int 8-bit precision and keeping activation at fp32 or bf16. This cuts down on the memory required to store the model, as we are using 50% of the memory per parameter.
 
+## Training Models
+
+### Data Collection
+
+[Here](https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1) is a good resource on a how a high quality training dataset for LLMs can be created.
+
 ## HCI / UX
 
 *Good tools make it clear how they should be used*. LLM's should not be chatbot interfaces with complex prompts, sliders for different settings should be used, i.e. competency with a topic, how verbose a response. Find an in depth article [here](https://wattenberger.com/thoughts/boo-chatbots).
@@ -222,4 +208,3 @@ Most interesting thing from here was *Inference Quantization*. The essentially m
 ## Resources
 
 - [ML Papers of Week](https://github.com/dair-ai/ML-Papers-of-the-Week)
-
