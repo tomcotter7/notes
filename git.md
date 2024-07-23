@@ -39,3 +39,13 @@ See who changed a line in a file
 ## Git maintenance
 
 run `git maintenance start` to run maintenance tasks in the background, should be run when you first create the repo.
+
+## Git show
+
+Get the last changed files in the most recent commit
+
+```bash
+
+git show --name-only --oneline HEAD | tail -n +2
+
+```
