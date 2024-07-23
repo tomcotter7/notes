@@ -29,7 +29,29 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DIR: 'tcotts'
-    
-        
-
       
+    - name: Get last workflow run commit
+      id: last_run
+      run: |
+          last_run_sha=$(git rev-list -n 1 --before="$(date -d 'last run' '+%Y-%m-%d %H:%M:%S')" main)
+          echo "::set-output name=sha::$last_run_sha"
+
+    - name: Get changed files
+      id: changed_files
+      run: |
+          if [ -z "${{ steps.last_run.outputs.sha }}" ]; then
+            # If this is the first run, get all files
+            changed_files=$(git ls-tree -r --name-only HEAD)
+          else
+            # Get files changed since last run
+            changed_files=$(git diff --name-only ${{ steps.last_run.outputs.sha }} HEAD)
+          fi
+          echo "Changed files:"
+          echo "$changed_files"
+          echo "::set-output name=files::$changed_files"
+
+    - name: Process changed files
+      run: |
+          # Here you can add any processing you want to do with the changed files
+          echo "Processing changed files..."
+          echo "${{ steps.changed_files.outputs.files }}"
