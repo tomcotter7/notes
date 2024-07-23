@@ -10,3 +10,7 @@
 
 - :vimgrep /pattern/ file - Search for `pattern` in `file`.
     - use `copen` to open the quickfix window.
+
+## ThePrimeagen
+
+The Primeagen is cool
