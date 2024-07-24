@@ -12,12 +12,17 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4
-    - id: files
-      uses: jitterbit/get-changed-files@v1
+    - name: Get all changed markdown files
+      id: changed-markdown-files
+      uses: tj-actions/changed-files@v44
       with:
-        format: 'space-delimited'
-
+          files: |
+             **.md
+  
+    
+      
     - name: gptcotts-action
+      if: steps.changed-markdown-files.outputs.any_changed == 'true'
       uses: tomcotter7/gptcotts-github-action@main
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
@@ -28,5 +33,5 @@ jobs:
         PINECONE_INDEX: ${{ secrets.PINECONE_INDEX }}
         PINECONE_NAMESPACE: ${{ secrets.PINECONE_NAMESPACE }}
         COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
-        CHANGED_FILES: ${{ steps.files.outputs.all }}
+        CHANGED_FILES: ${{ steps.changed-markdown-files.outputs.all_changed_files }}
         
