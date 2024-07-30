@@ -130,6 +130,18 @@ This is done for each word, which can obviously be performed in paralell. After 
 
 This scaled dot product attetention previously mentioned is 1-head attention. Multi-head attention is just this with different $q, k, v$ matrices. This means we can attend to different parts of the sequence different. Again this can be done in parallel.
 
+#### Multi Query Attention
+
+In this case, we still have N $q$ heads, but unlike MHA, we have only 1 $k$ and $v$ head. This means we still do the same number of operations, but have a lower memory footprint (less stored weights).
+
+There is some quality loss in this case.
+
+#### Grouped Query Attention
+
+Assume, we have 8 $q$ heads, with 4 sub-groups. This means we have 4 $k$ and $v$ heads. This is a way of "parameterizing" the amount of quality loss in MHA.
+
+[yt video explaining GQA & MQA](https://www.youtube.com/watch?v=pVP0bu8QA2w)
+
 ## LLM Architectures
 
 ### Scalable MatMul-free Language Modelling
@@ -208,3 +220,13 @@ Most interesting thing from here was *Inference Quantization*. The essentially m
 ## Resources
 
 - [ML Papers of Week](https://github.com/dair-ai/ML-Papers-of-the-Week)
+
+## Productionizing LLMs
+
+### LinkedIn - Musings on a Generative AI Product
+
+[Article](https://www.linkedin.com/blog/engineering/generative-ai/musings-on-building-a-generative-ai-product)
+
+Most interesting part was getting structured data. In this case, they built a custom yaml parser that handled the specific mistakes the LLM could make. This reduced errors from 10% -> 0.01%.
+
+They found they could easily reach "80% quality" but every subsequent 1% gain after that got harder and harder.

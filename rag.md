@@ -18,15 +18,6 @@ They essentially finetune models to respond with a 'chain-of-thought' style resp
 
 [ir-measures](https://ir-measur.es/en/latest/getting-started.html) - A Python package for evaluating Information Retrieval systems.
 
-### Evaluating Embedding Models
-
-[Article](https://ar5iv.labs.arxiv.org/html/2305.06300).
-
-They found that BM25 outperforms embedding models for the re-ranking use case - which makes sense. The best performance came from combining the Cohere **embedding** model with BM25. Note that they are using bi-encoder embedding models for re-ranking, not cross-encoders.
-
-The metrics they used were:
-- [nDCG@k](https://en.wikipedia.org/wiki/Discounted_cumulative_gain) - Normalized Discounted Cumulative Gain, k is the number of documents to consider - i.e. the top-k documents. The also looked at recall - which is useful when you have multiple "correct/relevant" answers.
-
 ### Luna: An Evaluation Foundation Model to Catch Language Model Hallucinations
 
 [Paper](https://arxiv.org/pdf/2406.00975)
@@ -56,18 +47,6 @@ Therefore, the only relevant term in BM25 is IDF. IDF essentially means the more
 This is a useful alternative to BM25, but should be used in conjunction with a dense search.
 
 NOTE: This was proved to be a false result. They have since corrected it, but it now performs on par with BM25.
-
-### GISTEmbed
-
-This [paper](https://arxiv.org/pdf/2402.16829) details a method on collecting negatives for text embedding fine-tuning. It uses a guide model to enhance in-batch negative selection.
-
-They use large & high performing embedding models to finetune smaller embedding models. So, given a (Q, P) pair, they sample the entire batch for negatives, then use the guide model to filter out any "negatives" with a higher similarity to Q than P. This means you can finetune a model with just (Q, P) pairs, and not have to worry about collecting negatives.
-
-### augmented-SBERT
-
-This [paper](https://arxiv.org/pdf/2010.08240) details a powerful method of finetuning bi-encoders. Essentially, they create a labelled dataset using a cross-encoder, which then can be used to fine-tune a bi-encoder.
-
-Cross-Encoders can be finetuned with less data as well, so this is the typical method for adapting the retrieval models to a specific domain.
 
 ### Is Cosine Similarity of Embeddings Really About Similarity?
 
