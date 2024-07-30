@@ -1,5 +1,4 @@
 # Synthetic Data
-
 ## Techniques & Papers
 
 ### Scaling Synthetic Data Creation with 1B Personas
@@ -29,3 +28,16 @@ This concise summary of AgentInstruct is:
 
  This is more focused on generating "generic" synthetic data for finetuning.
 
+### Promptagator
+
+[Paper](https://arxiv.org/pdf/2209.11755)
+
+This paper is an implementation of using encoder-decoder (generative LLMs) to generate synthetic data and then finetune cross-encoders / bi-encoders on that data.
+
+They suggest that adding examples to the prompt resulted in much better data quality, but this was also with FLAN (137B), whereas now we have GPT-4 (1760B). I don't think we neccessarily need few-shot prompting anymore.
+
+### InPars
+
+[Paper](https://arxiv.org/pdf/2301.01820)
+
+This paper is a way of generating synthetic data for a domain specific adaption of for monoT5. The [Github](https://github.com/zetaalphavector/InPars/tree/master) is available.
