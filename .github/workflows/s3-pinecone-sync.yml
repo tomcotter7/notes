@@ -22,7 +22,7 @@ jobs:
     
       
     - name: gptcotts-action
-      if: steps.changed-markdown-files.outputs.any_changed == 'true'
+      if: steps.changed-markdown-files.outputs.any_modified == 'true'
       uses: tomcotter7/gptcotts-github-action@main
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
