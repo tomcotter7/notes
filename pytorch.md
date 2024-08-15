@@ -48,3 +48,13 @@ To load the model:
 ```python
 torch.nn.Module.load_state_dict(torch.load(PATH))
 ```
+
+## Torchinfo
+
+```python
+from torchinfo import summary
+
+summary(model, input_size=<some input shape>)
+```
+
+This will show you how the input is transformed when passed through the model.

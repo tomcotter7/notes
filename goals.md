@@ -1,7 +1,7 @@
 # Goals
 
 - [X] MLP in PyTorch
-- [ ] CNN in PyTorch
+- [X] CNN in PyTorch
 - [ ] RNN in PyTorch
 - [ ] LSTM in PyTorch
 - [ ] Transformer in PyTorch
