@@ -68,3 +68,15 @@ The metrics they used were:
 They argue that existing pairwise or triplet loss functions will suffer from slow converagence to due to a large proproration of trivial pairs / triplets as the model improves.
 
 
+## Models
+
+### ColBERT
+
+[HuggingFace](https://huggingface.co/colbert-ir/colbertv2.0)
+[Demo](https://www.youtube.com/watch?v=cN6S0Ehm7_8)
+
+ColBERT is an alternative to an cross-encoder. Cross-Encoder is an "early interaction" model, it takes in a query & a document, combines them and then outputs a similarity score. This can get pretty slow due to the attention mechanism.
+
+ColBERT is a "late interaction" model. For both the query and the document, you produce an embedding for each **token**. For each token vector in the query, you get the max similarity score across all token vectors in the document. The final score is the sum of all these max similarities.
+
+This is different to a cross-encoder because the q & d are not combined.
