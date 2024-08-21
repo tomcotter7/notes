@@ -108,6 +108,16 @@ The Mamba2 paper tries to combine the efficiency of Attention with the original 
 
 ## LLM Papers & Models
 
+### Hermes 3
+
+[Technical Report](https://nousresearch.com/wp-content/uploads/2024/08/Hermes-3-Technical-Report.pdf)
+
+This is essentially a finetune on top of Llama3.1
+
+The main point of this paper was the quality of dataset that they used. They collected & cleaned the data for 5 months before finetuning the model.
+
+The model is finetuned on Llama3.1, and outpeforms the instruction-tuned version of Llama on some tasks. The authors also note the importance of adhereing to the system prompt, and not training on additional "guardrails" within the data. They suggest that the applications built around the model should be responsible for this.
+
 ### NemoTron-4 340B
 
 [Paper](https://d1qx31qr3h6wln.cloudfront.net/publications/Nemotron_4_340B_8T_0.pdf).
