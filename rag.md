@@ -121,6 +121,14 @@ Youtube Video from langchain [here](https://www.youtube.com/watch?v=pbAd8O1Lvm4)
     - How would I implement this without langchain?
     - What benefit does langgraph add? -> I think this can be done with function calling and a custom state machine.
 
+### ColPali
+
+[Blog Post](https://huggingface.co/blog/manu/colpali)
+
+This suggests using Vision LM to do retrieval. The idea is that the Vision LM encodes screenshots of the document pages directly, and then use these embeddings to do retrieval. 
+
+They use PaliGemma3B and ColBERT to do this. This outperforms (and is faster) than current OCR based retrieval.
+
 ## Frameworks
 
 ### FlashRAG

@@ -191,3 +191,14 @@ Most interesting thing from here was *Inference Quantization*. The essentially m
 Most interesting part was getting structured data. In this case, they built a custom yaml parser that handled the specific mistakes the LLM could make. This reduced errors from 10% -> 0.01%.
 
 They found they could easily reach "80% quality" but every subsequent 1% gain after that got harder and harder.
+
+### Evaluation of LLM Applications
+
+[Article](https://hamel.dev/blog/posts/evals/#motivation)
+
+This article detailas the need for a good evaluation framework for LLMs.
+
+Unit Tests -> Assertions the the model is working & producing the correct output.
+Humna & Model Eval -> Keep logs of the interactions with the model, and validate that the correct thing is happening. Another LLM can periodically do this as well.
+A/B Testing
+

@@ -10,6 +10,10 @@ Gibbs Sampling LDA is more suited to short form text (i.e Tweets)
 
 ## Preparing Data
 
+### Stopwords
+
+Filtering out stop words for retrieval actually reduced the performance of the model, almost a 10 point reduction in NDCG@10.
+
 ### PDFs
 
 #### Headers and Footers
