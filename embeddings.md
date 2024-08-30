@@ -67,4 +67,29 @@ The metrics they used were:
 
 They argue that existing pairwise or triplet loss functions will suffer from slow converagence to due to a large proproration of trivial pairs / triplets as the model improves.
 
+## Reranking 
+
+### ColBERT
+
+[HuggingFace](https://huggingface.co/colbert-ir/colbertv2.0)
+[Demo](https://www.youtube.com/watch?v=cN6S0Ehm7_8)
+
+ColBERT is an alternative to an cross-encoder. Cross-Encoder is an "early interaction" model, it takes in a query & a document, combines them and then outputs a similarity score. This can get pretty slow due to the attention mechanism.
+
+ColBERT is a "late interaction" model. For both the query and the document, you produce an embedding for each **token**. For each token vector in the query, you get the max similarity score across all token vectors in the document. The final score is the sum of all these max similarities.
+
+This is different to a cross-encoder because the q & d are not combined. ColBERT is more efficient because the document embeddings only need to be calculate once. Therefore, if you are reranking over many documents it may be better to use ColBERT.
+
+[JinaAI Article](https://jina.ai/news/what-is-colbert-and-late-interaction-and-why-they-matter-in-search/) - also useful.
+
+### Any* Embedding Model Can Be a Late Interaction Model
+
+[Article](https://qdrant.tech/articles/late-interaction-models/)
+
+In embedding models, the final output is a single vector. However, this vector is produced by a pooling operation (typically mean pooling) of the final representation of the token vectors. 
+
+These token vectors are pretty similar to the way the ColBERT works. This article showed that using these as multi-vector retrieval models actually outperformed ColBERT.
+
+The only issue is that using these multi-vector models with all the output vectors uses up more memory than ColBERT embeddings. However, the authors of the article showed that in this case, quantization to int8 was fine. 
+
 

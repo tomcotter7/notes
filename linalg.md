@@ -101,3 +101,9 @@ The trace operator gives the sum of the diagonal elements of a matrix: $tr(A) = 
 ## The Determinant
 
 The determinant of a square matrix is a function mapping matrices to real scalars. It is denoted as $det(A)$ or $|A|$. The determinant of a matrix is the product of all the eigenvalues of the matrix.
+
+You can also calculate the determinant of a matrix in other ways, for example a 2x2 matrix:
+A = $\begin{bmatrix} a & b \\ c & d \end{bmatrix}$
+$det(A) = ad - bc$
+
+This method is called the Laplace expansion.

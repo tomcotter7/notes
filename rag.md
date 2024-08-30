@@ -34,20 +34,6 @@ This [paper](https://arxiv.org/pdf/2407.02485v1) describes a method of finetunin
 
 It outperforms off the shelf language models & cross-encoder models designed to do reranking (at the cost of being 80b parameters - the 8b param one performs at a similar level). I do like the idea of simulatenously reranking and generation - it's a more efficient way of doing things.
 
-### BM-42
-
-BM-42 is a variant of BM25, introduced by Qdrant [here](https://qdrant.tech/articles/bm42/). It's a version of BM25 more suited to RAG applications.
-
-Why is BM25 bad? BM25 is not good at handling short documents, because we check both the number of times a word appears in a document; and the length of the document compared to the average document length. The intuition behind this is that if the word appears in a shorter document, the word is more important to that document. If we are chunking the documents into even sized chunks for dense retrieval, this term is not useful.
-
-BM25 = IDF * Term Importance in Document. 
-
-Therefore, the only relevant term in BM25 is IDF. IDF essentially means the more rare a term is, the more important it is. BM42 is a combination of attention scores and IDF score. Given an attention matrix, if we take the first row of the matrix, (i.e the [CLS] row) it tells us the importance of each term in the document. By taking the attention scores of the [CLS] token, we can look at the attention score for each term in the query. This determines if the term is relevant to the document or not.
-
-This is a useful alternative to BM25, but should be used in conjunction with a dense search.
-
-NOTE: This was proved to be a false result. They have since corrected it, but it now performs on par with BM25.
-
 ### Is Cosine Similarity of Embeddings Really About Similarity?
 
 [Paper](https://arxiv.org/pdf/2403.05440.pdf). In this paper they derive analytically that cosine-similarity can yield arbitrary and therefore meaningless `similarities`, this is even true for deep learned embeddings (such as the ones used in RAG). Cosine similarity has become popular under the motiviation that the norm of the vecotrs is not as important as the directional alignment between the vectors.
@@ -85,6 +71,14 @@ Since the embedding vectors have a high dimensionality, they use Uniform Manifol
 ### Fusion / Hybrid Retrieval
 
 We can use both a dense vector search (produced by an embedding model) and a sparse vector search (produced by a model like BM-25, which uses TF-IDF). We can then combine the results of both searches to produce a better result. These can be combined using RRF.
+
+Qdrant have produce a good article on this [here](https://qdrant.tech/articles/hybrid-search/).
+
+They suggest doing lots of different retrieval across branches and combining the result:
+
+Matryoshka --------------------> Reranking (CrossEncoder or ColBERT)
+Dense Vectors -> Fusion (RRF) -> ^ 
+Sparse Vectors -> ^
 
 ### Reciprocal Rank Fusion (RRF)
 
@@ -126,6 +120,14 @@ Youtube Video from langchain [here](https://www.youtube.com/watch?v=pbAd8O1Lvm4)
 - In this they use `langgraph`, which essentially creates a state-machine. The model can generate the `action` it could take.
     - How would I implement this without langchain?
     - What benefit does langgraph add? -> I think this can be done with function calling and a custom state machine.
+
+### ColPali
+
+[Blog Post](https://huggingface.co/blog/manu/colpali)
+
+This suggests using Vision LM to do retrieval. The idea is that the Vision LM encodes screenshots of the document pages directly, and then use these embeddings to do retrieval. 
+
+They use PaliGemma3B and ColBERT to do this. This outperforms (and is faster) than current OCR based retrieval.
 
 ## Frameworks
 
