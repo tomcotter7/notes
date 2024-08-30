@@ -12,15 +12,15 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Get all changed markdown files
       id: changed-markdown-files
       uses: tj-actions/changed-files@v44
       with:
           files: |
-             **.md
-  
-    
-      
+             **.md 
+
     - name: gptcotts-action
       if: steps.changed-markdown-files.outputs.any_modified == 'true'
       uses: tomcotter7/gptcotts-github-action@main
