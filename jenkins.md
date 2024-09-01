@@ -23,4 +23,6 @@ We can then use a `when` clause like so:
 
 This will only execute the steps of the stage if the expression is true.
 
+## Environment Variables
 
+To view all environment variables available on a Jenkins instance, go to `<jenkins-instance-url>/env-vars.html`.
