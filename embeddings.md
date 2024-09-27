@@ -92,4 +92,13 @@ These token vectors are pretty similar to the way the ColBERT works. This articl
 
 The only issue is that using these multi-vector models with all the output vectors uses up more memory than ColBERT embeddings. However, the authors of the article showed that in this case, quantization to int8 was fine. 
 
+### Late Chunking
+
+Late Chunking is slightly different to Late Interaction defined by ColBERT. Late Interaction compares every token in the query to every token in the document. This can get costly (imagine storing an embedding for each token).
+
+Late Chunking uses Pooling similar to embedding models. Embedding models, would chunk into 512 token chunks, then embed those tokens, and then produce a vector via pooling to a produce a single representation for that entire chunk. But what if we want to span multiple chunks?
+
+Late Chunking would first embed the entire chunk (therefore retaining the attention scores across all tokens). This obtains token embeddings. We split these into a determined sized (512) and then pool the token embeddings after that. This allows us to span multiple chunks.
+
+
 

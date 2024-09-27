@@ -168,15 +168,16 @@ kv cache: we store the previously calculate key, value attention matrices for to
 [Inference Optimization](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/)
 Most interesting thing from here was *Inference Quantization*. The essentially means setting the weights to use int 8-bit precision and keeping activation at fp32 or bf16. This cuts down on the memory required to store the model, as we are using 50% of the memory per parameter.
 
+### RoRF: Routing on Random Forests
+
+See [this article](https://www.notdiamond.ai/blog/rorf) in which they detail how they trained a random forest on embeddings and used it to route queries between two LLMs. They outperformed the LLMs on their own (with two strong LLMs) and resulted in a cheaper cost with compartiable performance when looking at (weak vs strong LLMs).
+
+
 ## Training Models
 
 ### Data Collection
 
 [Here](https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1) is a good resource on a how a high quality training dataset for LLMs can be created.
-
-## HCI / UX
-
-*Good tools make it clear how they should be used*. LLM's should not be chatbot interfaces with complex prompts, sliders for different settings should be used, i.e. competency with a topic, how verbose a response. Find an in depth article [here](https://wattenberger.com/thoughts/boo-chatbots).
 
 ## Resources
 
@@ -202,3 +203,13 @@ Unit Tests -> Assertions the the model is working & producing the correct output
 Humna & Model Eval -> Keep logs of the interactions with the model, and validate that the correct thing is happening. Another LLM can periodically do this as well.
 A/B Testing
 
+### Google - AI Ideas
+
+See [this article](https://blog.google/products/google-cloud/gen-ai-business-use-cases/) where Google detail a bunch of interesting AI usecases.
+
+
+## HCI / UX
+
+### Interacting with Chatbots
+
+*Good tools make it clear how they should be used*. LLM's should not be chatbot interfaces with complex prompts, sliders for different settings should be used, i.e. competency with a topic, how verbose a response. Find an in depth article [here](https://wattenberger.com/thoughts/boo-chatbots).

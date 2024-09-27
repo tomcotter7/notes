@@ -1,5 +1,13 @@
 # Retrieval Augmented Generation
 
+## Chunking
+
+### Financial Report Chunking for Effective Retrieval Augmented Generation
+
+Find the [paper here](https://arxiv.org/pdf/2402.05131v2).
+
+They used Chipper, a vision encoder decoder model to to extract the elements in each of the page. Which outputs a JSON representation of the document, listing elements per page characterized by their element type (e.g. text, title, table, etc.) and their bounding box coordinates.
+
 ## Q&A
 
 ### RAFT
@@ -128,6 +136,10 @@ Youtube Video from langchain [here](https://www.youtube.com/watch?v=pbAd8O1Lvm4)
 This suggests using Vision LM to do retrieval. The idea is that the Vision LM encodes screenshots of the document pages directly, and then use these embeddings to do retrieval. 
 
 They use PaliGemma3B and ColBERT to do this. This outperforms (and is faster) than current OCR based retrieval.
+
+#### Generating Synthetic Data for ColPali - Domain Adaptation
+
+[This article](https://danielvanstrien.xyz/posts/post-with-code/colpali/2024-09-23-generate_colpali_dataset.html) details a way of generating synthetic data for finetuning ColPali for domain adapation (in this case UFO images). They used a small (7b) VLM model to generate descriptions of the images, and then a text-based model to generate queries for those descriptions.
 
 ## Frameworks
 
