@@ -1,4 +1,4 @@
-# Linear Algebra
+# Linear Algebra - Chapter 2 of Ian Goodfellow's Deep Learning
 
 ## Chain Rule & Linear Regression
 

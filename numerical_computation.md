@@ -1,4 +1,4 @@
-# Numerical Computation
+# Numerical Computation - Chapter 4 of Ian Goodfellow's Deep Learning
 
 ## Overflow and Underflow
 

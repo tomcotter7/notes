@@ -1,4 +1,4 @@
-# Probability & Information Theory
+# Probability & Information Theory - Chapter 3 of Ian Goodfellow's Deep Learning
 
 ## Random Variables
 
