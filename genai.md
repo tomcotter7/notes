@@ -172,6 +172,50 @@ Most interesting thing from here was *Inference Quantization*. The essentially m
 
 See [this article](https://www.notdiamond.ai/blog/rorf) in which they detail how they trained a random forest on embeddings and used it to route queries between two LLMs. They outperformed the LLMs on their own (with two strong LLMs) and resulted in a cheaper cost with compartiable performance when looking at (weak vs strong LLMs).
 
+### Transformer Inference Toolkit
+
+[Article](https://astralord.github.io/posts/transformer-inference-optimization-toolset/).
+
+#### Details on GPUs
+
+This article starts off with an in-depth look at GPUs. One interesting point is that we can classify computations (layers) into one of three categories:
+
+- Compute-bound: The time spent on arithmetic operations exceeds the time spent on memory accesses. Typical examples are linear layesr with a large inner dimensio or a convolutional layer with a large number of channels.
+- Memory-bound: The time spent on memory accesses exceeds the time spent on computational operations. Most operations are classified as this, such as elementwise operations (activation functions, dropouts) or reductions (sum, softmax, normalization).
+- Overhead-bound: Communication-bound, interpreter-bound, etc.
+
+The balance between the first two is measured in arithmetic intensity, which is the number of arithmetic operations per byte of memory accessed required to run the computation. For example, apply a ReLU operation to an input tensor $x$ requires:
+
+- read 2 bytes
+- make 1 comparison
+- write 2 bytes
+
+Therefore, the aritmetic intensity of a ReLU is $\frac{1}{4}$. For each operation, we make 4 memory accesses. We can also look at an `ops:byte` ratio. Let's do an example of an input batch $x \in \mathcal{B}^{B \times d}$ and weight matrix $W \in \mathcal{R}^{d \times d}$. We want to compute the `ops:byte` ratio for a linear layer (i.e $xW$).
+
+The linear layer compuation requries $2Bd^2$ flops and $2d^2$ (given that $B << d$). If we are doing this on a A100 gpu, we can calculate $T_{compute}$ and $T_{memory}$:
+
+- $T_{compute} = \frac{2Bd^2}{312 \cdot 10^{12}}s$
+- $T_{memory} = \frac{2d^2}{1.55 \cdot 10^{12}}s$
+
+To find the bottleneck for our model, we can look at the ratio between these two terms, which is:
+
+- $\frac{T_{compute}}{T_{memory}} = \frac{B}{200}$
+
+Therefore, until our batch size is smaller than 200, our system performance is memory-bound. Enlarging the batch size to be greater than 200 increases the compuation time, while keeping the memory access time constant. This is the compute-bound scenario.
+
+#### KV Cache
+
+In GPTs, text generation occurs in two stages:
+
+- Prefill - the model ingests a large chunk of our prompt tokens in parallel, computing all hidden states and outputs in one pass.
+- Autoregressive Decoding - happens after prefill, where the model generates tokens one by one.
+
+In this second pahse, we don't need to send the entire query vector into the mechanism (as we have already calculated the attention values). We can also cache the K and V matrices so we don't have to recalculate them.
+
+We can also do things like *Multi-Query Attention*, which uses the same K and V matrices for each Q vector, which doesn't change the computational complexity, but does drastically reduce the memory footprint (depending on the number of Q heads).
+
+*Grouped Query Attention* is a mixed between MQA and MHA. We split h query heads into g groups, each with its own keys and values. When g = 1 GQA is equivalent to MQA and when g = h, GQA is equivalent to MHA.
+
 
 ## Training Models
 

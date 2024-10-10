@@ -115,3 +115,45 @@ The maximum likelihood estimator can readily be generalized to esimtate a condit
 $\theta_{ML} = argmax_{\theta} \sum_{i=1}^{m} log P(y_i | x_i; \theta)$
 
 THe main appeal of the maximum likelihood estimator is that it can be shown to be the best estimator asymptotically, as the number of exmaples $m \rightarrow \inf$, in terms of its rate of convergence of $m$ increases. The maximum likelihood esimtator has the property of consistency, as long as the data generating distribution $p_{data}$ is in the model family $p_{model}(\theta)$.
+
+## Bayesian Statistics
+
+The frequentist perspective is that the true parameter value $\theta$ is fixed but unknown, while the point estimate $\hat{\theta}$ is a random variable. The Bayesian uses probability to reflect degrees of certainty in states of knowledge. The true parameter $\theta$ is unknown or uncertain, therefore is represented as a random variable.
+
+In Bayesian, we essentially build a `prior` distribution, which is our initial belief about the parameter $\theta$. We then update the prior after seeing the training examples to produce a `posterior`, in which the training examples cause it to lose entropy and concentrate around a few highly likely values of the parameters.
+
+### Maximum a Posteriori (MAP) Esimation
+
+The MAP estimate chooses the point of maximal posterior probability.
+
+$\theta_{MAP} = argmax_{\theta} p(\theta | x) = argmax_{\theta}log p(x | \theta}) + log p(\theta)$
+
+$logp(\theta)$ is the prior distribution, and $log p(x | \theta)$ is the log likelihood term.
+
+## Supervised Learning Algorithms
+
+### Probabilistic Supervised Learning
+
+We want to estimate a probability distribution $p(y | x)$, which we can do by finding the best parameter vector $\theta$ for a parametric family of distributions $p(y | x; \theta)$.
+
+Linear regression corresponds to the family: $p(y | x;\theta) = \mathcal{N}(y; \theta^{T}x, I)$, which basically means "for any $x$, we expect $y$ to be normally distributed around $\theta^{T}x$"
+
+A logistic sigmoid function is defined as:
+
+$p(y = 1 | x; \theta) = \sigmoid(\theta^{T}x)$
+
+Logistic regression (as defined above) has no closed form solution, we must minimize the negative log likelihood using gradient descent.
+
+### Support Vector Machines
+
+This type of model is similar to linear regression in that it is driven by a linear function $w^{T}x + b$. The SVM predicts that the [postive|negative] class is present when $w^{T}x + b$ is [positive|negative]. The key innovation of SVMs is the kernel trick, in which it can be shown that many ML algorithms can be rewritten in terms of dot products between examples.
+
+For example, linear regression can be rewritten as:
+
+$w^{T}x + b = b + \Sigma_{i=1}^{m}\alpha_{i}x^{T}x^(i)$, where $x^{(i)}$ is a training example, and $\alpha$ is a vector of coefficients. Rewriting in this way enables us to replace $x$ with the output of a given feature function $\phi (x)$a and the dot product with a function $k(x, x^i) = \phi (x)^{T}\phi (x^i)}$. After replacing the dot product with kernal evaluations, we can make predictions using the function $f(x) = b + \Sigma_{i=1}^{m}\alpha_{i}k(x, x^i)$. The kernel-based function is exactly equivalent to preprocessing the data by applying $\phi (x)$ to all inputs, and then learning a linear model in the new transformed space.
+
+This is powerful in two ways. 1, we can learn models that are nonlinear as a funtion of x using convex optimization techniques that are guaranteed to converge efficiently. This is possible because we consider $\phi$ fixed and optimize only $\alpha$. 2, the kernel function often admits an implementation that is significantly more efficient than naively constructing two $\phi (x)$ vectors and explicitly taking their dot product.
+
+In many cases, $k(x, x')$ is a non-linear, tractable function of $x$ even when $\phi (x)$ is intractable.
+
+Other linear models use this, such as kernel machines. However, SVM have an advantage in that the vector $\alpha$ in a SVM contains mostly zeros. Therefore, classifying a new example requires evaluating the kernel functions only for the training examples that have nonzero $\alpha_{i}$. These training examples are known as support vectors.
