@@ -1,4 +1,16 @@
-# Encoder Models
+# Embedding Models
+
+## Techniques
+
+### Contextual Document Embeddings
+
+See [this paper](https://arxiv.org/pdf/2410.02525).
+
+It defines how to create contextualized document embeddings, i.e embeddings that are specific to a document corpus.
+
+Statistical methods of retrieval (e.g BM25) can easily incorporate prior corpus statistics, such as TF-IDF into their representations. This  imparts corpus-context dependence into the model, since this can't be updated with information specific to retrieval in a given domain at test time.
+
+The paper proposes a method to add contextualization directly to the architecture of the embedding model. Given some context documents, they embed each and then concatenate embeddings into a sequence. Then, to compute the embeddings for a different document $d'$, they concatenate the sequence of context embeddings with the token embedding matrix of another model applied to each token in $d'$. This is then passed through a transformer to produce the final embedding.
 
 ## Finetuning / Training Models
 
