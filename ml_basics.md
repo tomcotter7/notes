@@ -104,7 +104,7 @@ $\theta_{ML} = argmax_{\theta} E_{x \sim \hat{p}_{data}} log p_{model}(x;\theta)
 
 One way to interpret this is to view it as minimizing the dissimilarity between the empirical distribution $\hat{p}_{data}$ and the model distribution. The degree of dissimilarity is measured by the KL divergence:
 
-$D_{KL}(\hat{p}_{data} || p_{model}) = E_{x \sim \hat{p}_{data}}[log \hat{p}_{data}(x) - log p_{model}(x)}$. The term of the left is only dependent on the data, therefore when we train the model to minimize the KL divergence, we need only minimize the right term.
+$D_{KL}(\hat{p}_{data} || p_{model}) = E_{x \sim \hat{p}_{data}}[log \hat{p}_{data}(x) - log p_{model}(x)]$. The term of the left is only dependent on the data, therefore when we train the model to minimize the KL divergence, we need only minimize the right term.
 
 $ -E_{x \sim \hat{p}_{data}}[log p_{model}(x)]$
 
