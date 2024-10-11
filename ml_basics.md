@@ -115,3 +115,9 @@ The maximum likelihood estimator can readily be generalized to esimtate a condit
 $\theta_{ML} = argmax_{\theta} \sum_{i=1}^{m} log P(y_i | x_i; \theta)$
 
 THe main appeal of the maximum likelihood estimator is that it can be shown to be the best estimator asymptotically, as the number of exmaples $m \rightarrow \inf$, in terms of its rate of convergence of $m$ increases. The maximum likelihood esimtator has the property of consistency, as long as the data generating distribution $p_{data}$ is in the model family $p_{model}(\theta)$.
+
+## Bayesian Statistics
+
+Previously, we have been using frequentists statistics, which is the idea that we estimate a single value of $\theta$, and then make all predictions thereafter on that one estimate. Instead, we can use Bayesian statistics, in which we consider all possible values of $\theta$ when making a prediction.
+
+Before observing the data, we represent of knowledge of $\theta$ using the prior probability distribution, $p(\theta)$. After observing the data, we update our knowledge of $\theta$ using the posterior probability distribution, $p(\theta | \mathcal{X})$. Therefore, after having observed $\mathcal{X}$, if we are still quite uncertain about the value of $\theta$ then this uncertainty will be incorporated into our predictions.
