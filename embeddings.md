@@ -12,6 +12,8 @@ Statistical methods of retrieval (e.g BM25) can easily incorporate prior corpus 
 
 The paper proposes a method to add contextualization directly to the architecture of the embedding model. Given some context documents, they embed each and then concatenate embeddings into a sequence. Then, to compute the embeddings for a different document $d'$, they concatenate the sequence of context embeddings with the token embedding matrix of another model applied to each token in $d'$. This is then passed through a transformer to produce the final embedding.
 
+[This article](https://venturebeat.com/ai/new-technique-makes-rag-systems-much-better-at-retrieving-the-right-documents/) provides a more casual explanation.
+
 ## Finetuning / Training Models
 
 ### augmented-SBERT

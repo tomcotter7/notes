@@ -159,4 +159,45 @@ This is powerful in two ways. 1, we can learn models that are nonlinear as a fun
 In many cases, $k(x, x')$ is a non-linear, tractable function of $x$ even when $\phi (x)$ is intractable.
 
 Other linear models use this, such as kernel machines. However, SVM have an advantage in that the vector $\alpha$ in a SVM contains mostly zeros. Therefore, classifying a new example requires evaluating the kernel functions only for the training examples that have nonzero $\alpha_{i}$. These training examples are known as support vectors.
->>>>>>> 681883f52c2fe092d9f95892148353c0bffc1a2f
+
+## Unsupervised Learning Algorithms
+
+
+### Principle Components Analysis
+
+PCA learns a representations that has a lower dimensionality than the original input. It also learns a representation whose elements have no linear correlation with each other.
+
+Let us consider the $m \times n$ design matrix $\mathcal{X}$, where all the data has a mean of 0. The covariance matrix of $\mathcal{X}$ is defined as:
+
+$Var[x] = \frac{1}{m - 1} \mathcal{X}^{T}\mathcal{X}$. PCA finds a representation $z = W^{T}x$, where $Var[z]$ is diagonal.
+
+A covariance matrix of a $m \times n$ matrix is a $n \times n$ matrix where the diagonal represents the variance of each feature, and the off-diagonal elements represent the covariance between the features. Therefore, if the covariance matrix is diagonal, then the features are uncorrelated. The principal components of $\mathcal{X}$ can be obtained by Singular Value Decomposition (SVD). Specifically, they are the right singular vectors of $\mathcal{X}$. To see this, let $\mathcal{W}$ be the right singular vectors in the decomposition $\mathcal{X} = \mathcal{U}\Sigma\mathcal{W}^{T}$. We can then recovert the original eigenvector equations with $\mathcal{W}$ as the eigenvector basis.
+
+$$X^{T}X = (U \Sigma W^{T})^{T} U \Sigma W^{T} = W \Sigma^{2} W^{T}$$
+
+This is helpful to show that PCA results in a diagonal $Var[z]$
+
+$$ Var[x] = \frac{1}{m-1}X^T X = \frac{1}{m-1} (U \Sigma W^T)^T U \Sigma W^T = \frac{1}{m-1} W \Sigma^2 W^T$$
+
+where we use the fact that $U^T U = I$ and $W^T W = I$.
+
+$Var[z] = \frac{1}{m-1} Z^T Z = \frac{1}{m-1}W^T X^T X W = \frac{1}{m-1} \Sigma^{2}$, which is diagonal because $\Sigma$ is diagonal.
+
+### K-Means Clustering
+
+The k-means clustering algorithm divides the training set into k different clusters of examples that are near each other. We can thus think of the algorithm as providing a k-dimensional one-hot code vector $h$ representing an input $x$. This is an example of a sparse representation. 
+
+It has a disadvantage in that the output of this clustering algorithm does not telll us that certain categories are more similar to each other than others (red cars are closer to grey cars than grey trucks), instead all we know is that each category is different. It is also not entirely clear what the optimal distributed representation is for a given input, for example how does the learning algorithm know whether we are more interested in color and car-v-truck rather than manufacturer and age.
+
+## Stochastic Gradient Descent (SGD).
+
+The cost function used by a ML algorithm often decomposes as a sum over training examples of some per-example loss function. For example, the negative conditional log-likelihood of the training data can be written as, $J(\theta) = \mathbb{E}_{x, y \sim \hat{p}_{data}} L(x, y, \theta) = \frac{1}{m} \sum_{i=1}^{m} L(x^{(i)}, y^{(i)}, \theta)$, where $L$ is the per-example loss L(x, y, \theta) = -log p(y | x; \theta)$.
+
+$\theta$ in this case is the model parameters. For these additive cost functions, the gradient descent requires computing
+
+$\delta_{\theta}J(\theta) = \frac{1}{m}\Sigma_{i=1}^{m} \delta_{\theta}L(x^{(i)}, y^{(i)}, \theta)$, which basically means calculating the gradient of the loss function for each example and then averaging them. The is O(m) for each step of the algorithm, which is too slow for large datasets.
+
+The insight of SGD is that the gradient is an expectation, which may be approximately estiamted using a small set of samples. Specifically, on each step of the algorithm, we can sample a **mini-batch** of examples $B = {x^{(1)}, ..., x^{(m')}}$ where $m' << m$. Crucially, $m'$ is held fixed as the training set grows. The estimate of the gradient is formed as:
+
+$g = \frac{1}{m'} \delta_{\theta} \Sigma_{i=1}^{m'} L(x^{(i)}, y^{(i)}, \theta)$.
+
