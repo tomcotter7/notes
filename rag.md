@@ -160,6 +160,16 @@ The metrics they are using (as of 12/06/2024) are:
 
 ## Resources
 
+### Low-Hanging Fruit for RAG Search
+
+[Article](https://jxnl.co/writing/2024/05/11/low-hanging-fruit-for-rag-search/) in this article, Jason details some simple things that can be done to improve RAG search.
+
+### How to build a terrible RAG system
+
+[Article](https://jxnl.co/writing/2024/01/07/inverted-thinking-rag/) in this article, Jason details all the things that companies think that they need to do to build a RAG system, but are actually terrible ideas.
+
+One that I liked was 'Don't show intermediate results' where Jason basically suggests to add things like 'Understanding your question, Searching with '...', Finding the Answer' etc. This is a good idea, as it can help the user understand what the system is doing.
+
 ## Applied LLMs
 
 [Article](https://applied-llms.org/)
