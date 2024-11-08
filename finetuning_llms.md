@@ -58,6 +58,14 @@ This is a fine-tuning / pre-training method similar to LoRa / QLoRa in the sense
 
 [This yt video](https://www.youtube.com/watch?v=VC9NbOir7q0) explains the concept well. However, GaLore is essentially more memory efficient that LoRA (and more accurate because this matrix is actually low rank, rather than being approximated by a low-rank matrix).
 
+### LoRA vs Full Fine-Tuning: An Illusion of Equivalence
+
+[This paper](https://arxiv.org/pdf/2410.21228v1) shows the LoRA finetuning (especially for low-rank) doesn't fully replace full finetuning. LoRA introduces *intruder dimensions* into the SVD of the weight matrices, which are singular vectors (with a high singular value, and therefore important) which are orthgonal to the original singular vectors in the original weight matrix.
+
+However, they show that using higher rank (with rank-stablization) results in less of these intruder dimensions (and therefore better finetuning). They also suggest to scale the $\alpha$ parameter with the rank, using $\alpha$ = $2r$.
+
+Models with these intruder dimensions (whilst performing well on the task they are finetuned for), lose the adaptability to handle different tasks.
+
 ## Reinforcement Learning
 
 ### RLAIF
