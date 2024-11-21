@@ -62,6 +62,10 @@ Assume, we have 8 $q$ heads, with 4 sub-groups. This means we have 4 $k$ and $v$
 
 [yt video explaining GQA & MQA](https://www.youtube.com/watch?v=pVP0bu8QA2w)
 
+#### Flash Attention
+
+Notes on [this yt video](https://youtube.com/watch?v=zy8ChVd_oTM).
+
 ### Positional Embeddings
 
 Positional embeddings are needed because Transformer models are position invrariant by defaulf. For example, "the dog chased the pig" and "the pig chased the dog" have the same representation in the model.
