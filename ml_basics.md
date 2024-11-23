@@ -201,3 +201,24 @@ The insight of SGD is that the gradient is an expectation, which may be approxim
 
 $g = \frac{1}{m'} \delta_{\theta} \Sigma_{i=1}^{m'} L(x^{(i)}, y^{(i)}, \theta)$.
 
+## Movitation for Deep Learning
+
+### The Curse of Dimensionality
+
+One challenge posed by the curse of dimensionality is a statistical challenge. This arises because the number of possible configurations of the input space grows exponentially with the number of dimensions. As the number of dimensions grows, the more likely it is we see a configuration that we have not seen before. How can we possibly say something meaningful about these new configurations?
+
+### Local Constancy and Smoothness Regularization
+
+The **smoothness prior** or **local constancy prior** states that the function we learn from our algorithm should not change much within a very small region. These priors are designed to encourage the learning process to learn a function $f*$ that satisfies the condition: $f*(x) \approx f*(x + \epsilon)$ for small $\epsilon$. When we assume the smoothness prior, we cannot represent a complex function that has many more regions that the number of training examples. There has to be enough examples for the learning algorithm to observe high points on most peaks and low points on most valleys. This is generally true in low dimensions, but in high dimensions, even a very smooth function can change smoothly but in a different way along each dimension.
+
+The key insight here is that a very large number of regions ($2^k$) can be defined with $k$ examples, as long as we introduce some dependencies between the regions through additional assumptions about the underlying data distribution.
+
+### Manifold Learning
+
+A manifold is a connected region. Mathematically, it is a set of points associated with a neighborhood around each point. From any given point, the manifold locally appears to be a Euclidean space. In everyday life, we experience the surface of the world as a 2-D plane, but it is in fact a spherical manifold in 3-D space.
+
+In ML, it tends to be used more loosely to designate a connected set of points that can be approximate well by considering only a small number of dimensions, embedded in higher dimensional space. A figure eight in a manifold that has a single dimenision in most place, but two dimensions at the crossover point.
+
+Manifold learning algorithms assuming that most of $\mathcal{R}^{n}$ consists of oinvalid inputs, and that the interesting inputs occur only along a collection of manifolds containing a small subset of points, with interesting variations in the output of the learned function occuring only along directions that lie on the manifold, or with interesting variations happening only when we move from one manifold to another.
+
+The reason we can assume this is two-fold. One is that uniform noise essentially never resembles structured inputs from domains like text, images and audio. The distribution of real data occupies a very little volume in the total possible input space. The second reason is that neighborhoods and transformations can be imagined (at least informally) when moving around these manifolds. In the case of images, we can think of many transformations that can help us trace out the manifold, for example gradually dimminng the lights, or pivoting an object in the image.
