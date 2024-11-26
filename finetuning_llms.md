@@ -107,3 +107,13 @@ I quite like this approach because you get a way of producing task specific vect
 This is a process of fine-tuning to follow a CoT type approach, by producing "thoughts" after each token, which are combined with the previous tokens to predict the next token. They call it *Quiet* because they are training the model to think before it speaks, but not neccesarily outputting the "thoughts".
 
 The start of thought and end of thought tokens are `---` as typically in text, this is used as a 'break' or 'pause'.
+
+## Domain Adaptation
+
+### Fine-Tuning LLMs For Domain Adaptation: Exploration of Training Strategies, Scaling, Model Merging and Synergistic Capabilities.
+
+[Paper](https://arxiv.org/pdf/2409.03444)
+
+The authors found that the best way to fine-tune a model for domain adaptation was always to merge the finetune model with some other model (in this case if it was a finetune of Llama3.1-8b\[-Instruct\] then they would merge it with Llama3.1-8b-Instruct.
+
+To perform the merging they used a technique called SLERP, which is a non-linear merging technique. The S stands for Spherical, so by combining weights in this way, the combined models were better than the average of the individual models.
