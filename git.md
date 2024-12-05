@@ -57,3 +57,9 @@ git show --name-only --oneline HEAD | tail -n +2
 ## Remove recent commit without losing changes
 
 `git reset HEAD~1 --soft`
+
+## Configure new branch to automatically push to remote
+
+`git config --global push.autoSetupRemote true`
+
+

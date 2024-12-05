@@ -23,3 +23,16 @@
 ```
 <C-b> $
 ```
+
+## Create a new session
+
+```
+<C-b> :new
+<C-b> s
+```
+
+## Kill a session
+
+```
+tmux kill-session -t <session_name>
+```
