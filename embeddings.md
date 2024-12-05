@@ -2,6 +2,12 @@
 
 ## Techniques
 
+### Matroyshka Embeddings
+
+This [article](https://huggingface.co/blog/matryoshka) details a method of using matroyshka embeddings to essentially "front-load" the important information in the embeddings at the front of the vector. This is useful because we can actually decrease the dimensionality of our output vector, and therefore have more efficient retrieval.
+
+It works by summing the loss for each of the Matroyshka dimensions, and then trying to minimize that total loss, which will in-effect "front-load" the model. Each Matroyshka dimension is just a truncation of the output embeddings.
+
 ### Contextual Document Embeddings
 
 See [this paper](https://arxiv.org/pdf/2410.02525).
