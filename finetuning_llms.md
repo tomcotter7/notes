@@ -1,5 +1,27 @@
 # Fine-Tuning
 
+## Full Finetunes
+
+### Phi-4 Technical Report
+
+[Paper](https://arxiv.org/pdf/2412.08905)
+
+Phi-4 is a 14B parameter model that is fine-tuned on synthetic data from GPT-4.
+
+They used an array of synthetic data techniques to generate this:
+- Multi-Agent Prompting.
+- Self-Revision Workflows.
+- Instruction Reversal.
+
+They carefully curated the data "seeds", to ensure that the generated synthetic data is correct. They actually propose that synthetic data is better than real data. You can prompt the models to generate the exact data you want, and in the format you need.
+
+*For example, web forums are very different in style from LLM interactions. If a fact only appears
+in web forum data, the pretrained model will think it is very unlikely to occur in the chats it produces.
+Rewriting facts from the web forum into the language style of an LLM makes the facts more accessible
+during the LLM chat context of inference.* - sample from the paper.
+
+They also introduce something called Pivotal Token Search (PTS), which basically finds out when the model either generates a really good token for the sequence or a really bad one and tries to filter out the bad ones.
+
 ## PEFT
 
 ### Adapters
