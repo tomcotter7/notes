@@ -262,7 +262,9 @@ See [this article](https://blog.google/products/google-cloud/gen-ai-business-use
 
 *Good tools make it clear how they should be used*. LLM's should not be chatbot interfaces with complex prompts, sliders for different settings should be used, i.e. competency with a topic, how verbose a response. Find an in depth article [here](https://wattenberger.com/thoughts/boo-chatbots).
 
-## Entropy & LLMs
+## Sampling
+
+Sampling refers to the process of generating text, how do we actually select the best next token?
 
 ### `softmax` is not enough (for sharp out-of-distribution)
 
@@ -274,3 +276,13 @@ See [this article](https://blog.google/products/google-cloud/gen-ai-business-use
 They suggest a Lemma that softamx must disperse: "Let $e(n) \in \mathcal{R}^{n}$ be a collection of n logits going into the `softmax`$_{\theta}$ function with temperature $\theta$ > 0, bounded above and below s.t. $m \leq e_{k}^{n} \leq M$ for some $m, M \in \mathcal{R}$. Then, as more items are added ($n \rightarrow +\infin$), it must hold that, for each item $1 \leq k \leq n$, `softmax`$_{\theta}(e^{(n)})k = \Theta(\frac{n}{1})$. That is, the computed attention coefficients disperse for all items." which they then prove in the paper.
 
 They also note that setting $\theta$ to be 0 is problematic & decreases accuracy. Therefore, they suggest an adaptive temperature, which decreases as entropy increases (thereby decrease the entropy).
+
+### Forking Paths in Neural Text Generation
+
+[This paper](https://arxiv.org/pdf/2412.07961) works on the idea that LLMs have no intent behind what they will say, they are simply next-token predictors. They 'prove' this by looking at tokens that dramatically change the answer, for example:
+
+'Who is the current British head of state? Well, since we know it's \[2024|2021\], we can infer that it is [King Charles|Queen Elizabeth]'. The token in the brackets drastically changes the final answer. They also found that seemingly arbitrary tokens affect this (like sampling a '(' instead of a word). This results in them saying:
+
+"One interpretation might be that people typically holding intents and plan responses to some degree before they speak, whereas LLMs truly decide what to say next on the fly."
+
+There is a lot of complex probability stuff in this paper, so it might be worth re-reading.
