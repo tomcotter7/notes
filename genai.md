@@ -261,3 +261,16 @@ See [this article](https://blog.google/products/google-cloud/gen-ai-business-use
 ### Interacting with Chatbots
 
 *Good tools make it clear how they should be used*. LLM's should not be chatbot interfaces with complex prompts, sliders for different settings should be used, i.e. competency with a topic, how verbose a response. Find an in depth article [here](https://wattenberger.com/thoughts/boo-chatbots).
+
+## Entropy & LLMs
+
+### `softmax` is not enough (for sharp out-of-distribution)
+
+[This paper](https://arxiv.org/pdf/2410.01104v1) details that the softmax function degrades in performance as sequence length grows, and propose *adaptive temperature* as an ad-hoc technique for improving the sharpnes of softmax at inference time.
+
+
+*adaptive temperature* is not the solution but allows softmax to perform better even if the sequence length grows.
+
+They suggest a Lemma that softamx must disperse: "Let $e(n) \in \mathcal{R}^{n}$ be a collection of n logits going into the `softmax`$_{\theta}$ function with temperature $\theta$ > 0, bounded above and below s.t. $m \leq e_{k}^{n} \leq M$ for some $m, M \in \mathcal{R}$. Then, as more items are added ($n \rightarrow +\infin$), it must hold that, for each item $1 \leq k \leq n$, `softmax`$_{\theta}(e^{(n)})k = \Theta(\frac{n}{1})$. That is, the computed attention coefficients disperse for all items." which they then prove in the paper.
+
+They also note that setting $\theta$ to be 0 is problematic & decreases accuracy. Therefore, they suggest an adaptive temperature, which decreases as entropy increases (thereby decrease the entropy).
