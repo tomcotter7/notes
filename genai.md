@@ -220,6 +220,22 @@ We can also do things like *Multi-Query Attention*, which uses the same K and V 
 
 *Grouped Query Attention* is a mixed between MQA and MHA. We split h query heads into g groups, each with its own keys and values. When g = 1 GQA is equivalent to MQA and when g = h, GQA is equivalent to MHA.
 
+## Scaling Test Time Compute
+
+[This blog post](https://huggingface.co/spaces/HuggingFaceH4/blogpost-scaling-test-time-compute) by hugging face goes into detail on some of the potential test time compute implementations. In this case, they use *search against a verifier*.
+
+They focus on 3 topics:
+- **Best of N**: generate multiple responses per problem, and assigns scores to each candidate answer, typically using a reward model. Then select the answer with the highest reward (or a weightd variant).
+- **Beam search**: A systematic search method that explores the solution space, often combined with a process reward mdoel to optimse the sampling and evaluation of the intermediate steps. PRMs provide a sequence of scores, one for each step of the reasoning process.
+- **Diverse verifier tree search (DVTS)**: AN extension of beam search that splits the initial beams into independent subtress, which are then expanded gredilly using a PRM. The method improves diversity and overall performance (with larger test-time compute budgets).
+
+**Weighted Best of N**: Aggreate the scores across all identical responses and select the answer with the highest total rewrard. $a_weighted$ = $argmax_{a}\Sigma_{i=1}^{N} \mathcal{I}(a_i = a) \cdot RM(p, s_i)$.
+
+where $RM(p, s_i)$ is the reward model score of the i-th solution to problem p. $\mathcal{I}(a_i = a)$ is an indicator function that is 1 if the i-th solution is equal to the answer a, and 0 otherwise.
+
+**Beam search** is like doing this but at every step (usually indicated by a `\n\n`), and then looking at M (the beam width) different paths.
+
+**DVTS** is like beam search, but each initial 'branch' becomes an independent subtree, generating more potential solutions
 
 ## Training Models
 
