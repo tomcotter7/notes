@@ -62,4 +62,12 @@ git show --name-only --oneline HEAD | tail -n +2
 
 `git config --global push.autoSetupRemote true`
 
+## Prevent a 'pager' from being used for branch
+
+`git config --global pager.branch false`
+
+## Show branches in columns
+
+`git config --global column.branch always`
+
 
