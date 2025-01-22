@@ -112,6 +112,21 @@ The Mamba2 paper tries to combine the efficiency of Attention with the original 
 
 ## LLM Papers & Models
 
+### DeepSeek R1
+
+[Report](https://github.com/deepseek-ai/DeepSeek-R1/blob/main/DeepSeek_R1.pdf)
+
+This report details how people at DeepSeek built their reasoning model, which outperforms OpenAIs o1 at time of release.
+
+Esssentially, how they did it was to use Group Relative Policy Optimization (GRPO), a RL technique that allows models to be 'RL'd' without accessing supervised data, it all depends on the reward model.
+
+Their reward model was set up such that the R1 model was guided towards producing long 'chain-of-thought' like responses (as well as correct results). Since the two go hand-in-hand, the model now uses significantly more test-time compute and answers a significantly higher number of question correctly.
+
+The rewards focused on:
+- Accuracy Rewards (correctness)
+- Format Rewards (forcing the model to use <think></think> tags)
+- Language consistency reward (keeping the thinking output legible)
+
 ### Hermes 3
 
 [Technical Report](https://nousresearch.com/wp-content/uploads/2024/08/Hermes-3-Technical-Report.pdf)
