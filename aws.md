@@ -1,6 +1,7 @@
 # AWS
 
 ## Load Balancer -> EC2 Instance
+
 Find documentation [here](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-getting-started.html) on getting a load balancer to point to an EC2 instance.
 
 ## S3
@@ -8,13 +9,58 @@ Find documentation [here](https://docs.aws.amazon.com/elasticloadbalancing/lates
 `aws s3 sync` can sync all the files in a directory to an S3 bucket. For example, to sync all the files in the current directory to an S3 bucket called `my-bucket`, you can run:
 
 ```bash
-
 aws s3 sync . s3://my-bucket
-
 ```
+
+It's efficient because it only copies modified or new files.
+
 ## Sagemaker
 
-### Deploying ONNX Optimized Models
+### Using a Custom Docker Registry for SageMaker Training Jobs
+
+Typically, SageMaker requires the Docker image that is used as the base image for training to be in the ECR. However, with some set-up, it is possible to use a different Docker registry, even if it has a username/password!
+
+The first thing is to change the the `create_training_job` request:
+
+```python
+...
+AlgorithmSpecification={
+    "TrainingImage": ecr_image,
+    "TrainingImageConfig": {
+        "TrainingRepositoryAccessMode": "Vpc",
+        "TrainingRepositoryAuthConfig": {
+            "TrainingRepositoryCredentialsProviderArn": <LAMBDA_FUNCTION_ARN> # 
+        },
+    },
+    "TrainingInputMode": "File",
+},
+...
+VpcConfig={
+    "SecurityGroupIds": ["<SECURITY_GROUPS>"],
+    "Subnets": ["<SUBNETS>"],
+},
+...
+```
+
+The Lambda Function here provides the repository credentials back to Sagemaker, and the return value looks like this:
+
+```python
+return {
+    "Credentials": {
+        "Username": "<username>",
+        "Password": "<password>",
+    }
+}
+```
+
+This Lambda Function must be accessible from inside your VPC that SageMaker will run on, whether that means putting the lambda inside the VPC as well, or setting up a lambda endpoint, either works. The Security Group must allow outbound TCP traffic to your Docker Registry.
+
+
+Sources:
+- [AWS Docs - Sagemaker Custom Registry](https://docs.aws.amazon.com/sagemaker/latest/dg/docker-containers-adapt-your-own-private-registry.html)
+- [AWS Docs - Credentials for Registry](https://docs.aws.amazon.com/sagemaker/latest/dg/docker-containers-adapt-your-own-private-registry-authentication.html)
+
+### Deploying ONNX Optimized Models to an Nvidia Triton server
 
 We can deploy ONNX optimised models to an NVIDIA Triton server to perform inference. Note that with TensorRT ONNX models on Triton we need to compile the model on the same type of hardware that we deploy it with, thus we use the same GPU instance that we will be using for deployment of our SageMaker Real-Time Endpoint later. An issue with the Triton server is that we need the `config.pbtxt` file, which expects the Input/Output shapes needed for our model.
 

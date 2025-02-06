@@ -8,6 +8,8 @@ $H(X) = -\sum_{x \in X} p(x) log p(x)$
 
 so $x$ is all possible outcomes of the random variable $X$ and $p(x)$ is the probability of $x$.
 
+Shannon entropy uses a log of base 2.
+
 ## Information Content
 
 The information content of an event (suprisal) is a function that increases as the probability of the event decreases.

@@ -9,5 +9,5 @@
 ## Grep Commands
 
 - :vimgrep /pattern/ file - Search for `pattern` in `file`.
-    - use `copen` to open the quickfix window.
+    - use `copen` to open the quickfix window (where the results of the grep are stored).
 

@@ -1,18 +1,21 @@
 # NLP
 
 ## Topic Modelling
+
 ### Latent Dirichlet Allocation (LDA)
+
 An unsupervised ML model that can be used to discover topics in a corpus of documents.
     - https://www.youtube.com/watch?v=T05t-SqKArY
     - https://radimrehurek.com/gensim/auto_examples/tutorials/run_lda.html#sphx-glr-auto-examples-tutorials-run-lda-py
     - https://github.com/rwalk/gsdmm
+
 Gibbs Sampling LDA is more suited to short form text (i.e Tweets)
 
 ## Preparing Data
 
-### Stopwords
+### Filtering stopwords for embedding model finetuning
 
-Filtering out stop words for retrieval actually reduced the performance of the model, almost a 10 point reduction in NDCG@10.
+When experimenting with finetuning embedding models, I found that filtering out stop words for retrieval actually reduced the performance of the model. Resulting in an almost 10 point reduction in NDCG@10.
 
 ### PDFs
 
