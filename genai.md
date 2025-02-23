@@ -127,6 +127,18 @@ The rewards focused on:
 - Format Rewards (forcing the model to use <think></think> tags)
 - Language consistency reward (keeping the thinking output legible)
 
+They initially created R1-Zero, DeepSeekv3 trained exclusively via GRPO. Whilst it performed well, they found that it struggled to respond in a readable way, so combined this process with some additional Supervised Finetuning (both before and after the RL) to create DeepSeek-R1
+
+### DeepSeek Math
+
+[Paper](https://arxiv.org/pdf/2402.03300)
+
+This is the paper which introduces GRPO (a variant of PPO for reinforcement learning). By using this technique, along with a "meticously engineered data selection pipeline" they produced a 7b param model that outperforms 72b param models on Math problems.
+
+They created the "DeepSeek Math Corpus" which is 120B high-quality math tokens. To collect this they trained a fastText model on the OpenWebMath corpus such that they can recall more OpenWebMath-like web pages.
+
+They also found here that pre-training the model on code tokens, before training on math tokens significantly improves performance than compared to pre-training on general tokens.
+
 ### Hermes 3
 
 [Technical Report](https://nousresearch.com/wp-content/uploads/2024/08/Hermes-3-Technical-Report.pdf)
