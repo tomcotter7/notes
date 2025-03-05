@@ -272,7 +272,21 @@ where $RM(p, s_i)$ is the reward model score of the i-th solution to problem p. 
 
 ## Resources
 
+### ML Papers of the Week
 - [ML Papers of Week](https://github.com/dair-ai/ML-Papers-of-the-Week)
+
+### Deep Dive into LLMs
+
+- [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
+This video is by Andrej Karpathy, talking about how LLMs are built.
+
+(Byte Pair Encoding) BPE - transform all the words into bytes, and then look for common byte pairs, and coming them into single tokens. Take a look at [tiktokenizer.vercel.app](tiktokenizer.vercel.app) to do some tokenization demos.
+
+- Pretraining - Background Knowledge.
+- SFT - Imitating Being an Expert (A worked problem).
+- Reinforcement Learning - Practicing Problems.
+
+RLHF can produce *adversarial results* which means non-sensical results (an infinite number) which produce high rewards, but are not actually good. In verifiable domains you can run RL indefinitely without running into this (provided your reward function is set up well). However, RLHF is gameable so you cannot run it indefinitely.
 
 ## Productionizing LLMs
 
