@@ -133,11 +133,48 @@ They initially created R1-Zero, DeepSeekv3 trained exclusively via GRPO. Whilst 
 
 [Paper](https://arxiv.org/pdf/2402.03300)
 
-This is the paper which introduces GRPO (a variant of PPO for reinforcement learning). By using this technique, along with a "meticously engineered data selection pipeline" they produced a 7b param model that outperforms 72b param models on Math problems.
+DeepSeek's paper introduces GRPO (Grouped-Policy Optimization), a PPO variant that achieves remarkable efficiency in reinforcement learning for mathematical reasoning. Their 7B parameter model demonstrates superior performance compared to 72B parameter alternatives, primarily through two key innovations: a novel training approach and meticulously curated training data.
 
-They created the "DeepSeek Math Corpus" which is 120B high-quality math tokens. To collect this they trained a fastText model on the OpenWebMath corpus such that they can recall more OpenWebMath-like web pages.
+The team developed the DeepSeek Math Corpus, comprising 120B high-quality mathematical tokens. Their data collection strategy involved:
+- Training a fastText model on OpenWebMath to identify similar content
+- Implementing URL-based filtering, particularly targeting known mathematical domains (e.g., mathoverflow.net)
+- Manual annotation of mathematical subdomains for precision
 
-They also found here that pre-training the model on code tokens, before training on math tokens significantly improves performance than compared to pre-training on general tokens.
+The Supervised Fine-Tuning (SFT) phase focused on mathematical reasoning, incorporating:
+- Chain-of-thought demonstrations
+- Program-of-thought examples
+- Tool usage patterns
+
+GRPO differentiates itself from traditional PPO by eliminating the value function typically used for reward calculation, reducing model complexity while maintaining effectiveness. It does so because it samples a group (hence the G) of outputs from the model in order to produce a reward.
+
+Their training pipeline implements three major techniques:
+- Outcome supervision (output-based rewards)
+- Process supervision (step-wise reasoning rewards)
+- Iterative RL (continuous reward model refinement)
+
+Two significant discoveries emerged from the paper:
+
+- Code token pre-training significantly outperforms general token pre-training for mathematical reasoning
+- ArXiv papers proved surprisingly ineffective for improving mathematical reasoning capabilities
+
+### DeepSeek MoE
+
+[Paper](https://arxiv.org/pdf/2401.06066)
+
+In this paper, DeepSeek introduce their variant on MoE (Mixture-of-Expert) models. They found that previous implementations, which activate the top-K out of N experts, face challenges in ensuring that each expert acquires non-overlapping and focused knowledge.
+
+They mainly introduce two strategies: "finely segmenting the experts into $mN$ ones and activating $mK$ from them, allowing for a more flexible combination of activated experts" and "isolating $K$ experts as shared ones, aiming at capturing common knowledge".
+
+Conventional MoE architectures swap the FFNs in a Tranformer with MoE layers, each of which contains multiple experts, each structurally identical to a standard FFN. DeepSeek improve on this by (a) segmenting the experts into a finer grain, the FFN intermediate hidden dimension. They also (b) isolate certain experts to serve as shared experts that are always activated. By compressing common knowledge into these shared experts, redunancy amount other routed experts will be mitigated.
+
+(a) is achieved by segmenting each expert FFN into $m$ smaller experts by reducing the FFN intermediate dimension to $\frac{1}{m}$ its original size. Since each expert is now smaller, they also increase to the number of activated experts $m$ to keep the same computation cost. In short, they just use smaller experts.
+
+(b) is achieved by always assigning the token to certain experts, regardless of the router module. To achieve a constant computational cost, the nubmer of activated experts among other experts will be reduced by the number of 'shared experts'.
+
+They add a number of losses to prevent 'routing collapse' (aka when the model always selects the same experts). These are:
+- Expert Level Balance Loss (minimizing the correlation between how often an expert is selected (fi) and its average routing probability (Pi))
+- Device Level Balance Loss (Ensuring balanced computation across the devices upon which the expert 'group' is stored).
+
 
 ### Hermes 3
 
