@@ -16,6 +16,19 @@ The authors argue that prompt engineering is brittle, and akin to manually finet
 
 Working with LLM frameworks is annoying & the added complexity of not knowing the prompt or how many API calls are being made is annoying. [This blog post](https://hamel.dev/blog/posts/prompt/) details a library `mitmproxy` that can be used to intercept the API clalls, so you can determine exactly what is going on under the hood. The blog post also describes how current frameworks implement the "magic of LLMs". These include: `guardrails`, `guidance`, `langchain`, `instructor` & `dspy`.
 
+### Chain of Draft: Thinking Faster by Writing Less
+
+[Paper](https://arxiv.org/pdf/2502.18600)
+
+Chain of Draft is a variant of CoT which uses as little as 7.6% of the tokens, whilst still performing as well as CoT does on reasoning based tasks.
+
+An example of a CoD prompt:
+```
+Think step by step, but only keep a minimum draft for each thinking step, with 5 words at most. Return the answer at the end of ther response after a separator ####.
+```
+
+Due to the scarcity of CoD-style reasoning patterns in the training data, this technique does not work well without few-shot prompting (as of 03/03/2025).
+
 
 ## LLM Concepts
 
