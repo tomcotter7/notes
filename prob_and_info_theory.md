@@ -28,6 +28,18 @@ A probability distribution over continuous variables may be described using a pr
 
 A probability density function does not give the probablity of a specific state directly; instead it gives the probability of landing inside an infinitesimally small region with volume $dx$.
 
+#### Cumulative Density Function
+
+$P(x)$ is the probabilty that $X$ will take a value less than or equal to $x$.
+
+Therefore, you can use this to produce a truncated distribution.
+- Convert the min/max values to their CDF.
+- Sample uniformly from (min, max).
+- Convert back to the corresponding value (using `ppf`)
+
+This works because of the relationship between the CDF and the PDF. The steeper the CDF, the higher the PDF. Therefore, even though you are sampling evenly along CDF values, these map to either points of high concentration (high PDF, steep CDF) or low concentration (low PDF, flat CDF). Essentially, there are more points on the CDF line that corresponding to values closer to the mean (assuming it was normal).
+
+
 ## Marginal Probability
 
 The probability over a subset of variables is known as the marginal probability distribution. For example,
