@@ -1,4 +1,5 @@
 # Synthetic Data
+
 ## Techniques & Papers
 
 ### Scaling Synthetic Data Creation with 1B Personas
@@ -51,3 +52,50 @@ In detail:
     - They also tested this with Gemini Flash vs Pro, where in this case N is 35.
     - They found that models finetuned with Flash data outperformed models finetuned on Pro data specifically for Math / Instruction-Following tasks.
     - This was also true when they reduced N such that Flash cost was 0.1x that of the Pro cost which is even more interesting.
+
+
+## Tabular Synthetic Data
+
+### TabularARGN: A Flexible and Efficient Auto-Regressive Framework for Generating High-Fidelity Synthetic Data
+
+**ROUGH NOTES**
+
+"By training on randomized subset of conditional probabilities" - rather than training to predict the entire row (aka $P(x_1, x_2, ... , x_n)$) they are training on $P(x_1|x_5, x_9)$, $P(x_2|x_3, x_4)$. By doing this, it supports conditional generation (generation while fixing some columns to be certain values) and imputation (filling out blanks).
+
+In normal auto-regressive models, the row would be  $P(x_1, x_2, ... , x_n)$, which due to the chain rule of probability would be $P(X_1,X_2,...,X_n) = P(X_1) × P(X_2|X_1) × P(X_3|X_1,X_2) × ... × P(X_n|X_1,...,X_{n-1})$
+
+Data Encoding:
+Data Encoding means that ultimately, every column, independent of its original dat type, will be mapped onto or more categorical sub columns. For example, datetime columns are split into their date & time components, numerical columns are binned, mapped to percentiles or split into individual digits.
+
+For categorical data, any rare categorical values can be mapped into a single category to protect against basic membership inference attacks.
+
+For numeric/datetime the values are also clipped to be insensitive to the inclusion of individual outliers.
+
+The method of producing categorical data for all features means the number of features increases. This number of features is known as $D$ from now on.
+
+Flat Table Model:
+
+Essentially, for each feature $x_i$, the model learns to output the estimated discrete conditional probabilities $p(x_i | x < i)$, where $x < i$ is the set of preceeding features.
+
+
+BUT during training, the model incoporates a flexible "any-order" approach, wherein the order of features is dynamically shuffled for each training batch. This allows the model to estimate the probabitilites conditioned on any subset of features.
+
+Model Components:
+
+For every sub-column ($\in D$), the model incorporates an embedding layer, a regressor block and a predictor layer which are interconnected via a permutation masking layer that directs the flow of information.
+
+Embedding -> transforms a sub-column $x_i$ into a embedding vector, $e_{x_i}$. The dimensionality of these vectors is determined via a heuristic, that depends on the cardinality of a sub-column.
+
+Each $e_{x_i}$ are concatenated into a single vector [$e_{x_1}$, ... $e_{x_n}$], which is then passed to the perumatation masking layer, which introduces a "causal" feeding mechanism based on a random column order - varying from batch to batch - ensuring that each columns regressor receives only the inputs it is allowed to access based on the conditional dependencies. (it befores a simple masking to do this).
+
+Regressor consists of one or more feed-forward layers and the predictor layer is a single feed-foward layer with a softmax applied.
+
+Model Training:
+
+The training taret is the minimization of categorical cross-entropy, computed and summed for each sub column.  During training, teacher forcing is employed, where ground-truth values from preceding columns are provided as inputs to condition the model. This approach effectievly treats the training process as a multi-task problem, wherein each sub-column represents a distinct predictive task.
+
+Sequential Table Model:
+
+This model is auto-regressive along the column dimension (same as the flat model) and also the time/sequence dimension.
+
+Basically, this means that the column specific regressors of the sequential table model also ingest an encoded history of all previous time steps. This historical encoding is provided by the last hidden state of a history encoder consisting of a LSTM layer.
