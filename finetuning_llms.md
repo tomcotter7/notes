@@ -2,6 +2,14 @@
 
 ## Full Finetunes
 
+### Quiet-STaR
+
+[Quiet-STaR - Paper](https://arxiv.org/pdf/2403.09629.pdf)
+
+This is a process of fine-tuning to follow a CoT type approach, by producing "thoughts" after each token, which are combined with the previous tokens to predict the next token. They call it *Quiet* because they are training the model to think before it speaks, but not neccesarily outputting the "thoughts".
+
+The start of thought and end of thought tokens are `---` as typically in text, this is used as a 'break' or 'pause'.
+
 ### Phi-4 Technical Report
 
 [Paper](https://arxiv.org/pdf/2412.08905)
@@ -102,9 +110,37 @@ Then, using the response from this they ask:
 
 They don't generate a response here, they just look at the probability of the tokens for "1" and "2" for the answer to the first question.
 
-### Alternatives to Fine-Tuning (That Isn't In-Context Learning)
+## Reinforcement Finetuning
 
-#### Prompt Tuning / Prefix Tuning
+Reinforcement Finetuning is a technique that uses reinforcement learning (GRPO, PPO, etc...) to teach models to perform specific tasks by giving them a reward for doing that.
+
+### Teaching an AI to Write GPU Code: A Deep Dive into Reinforcement Fine-Tuning
+
+
+[Predibase's article](https://predibase.com/blog/teaching-ai-to-write-gpu-code-a-deep-dive-into-reinforcement-fine-tuning) demonstrates using Reinforcement Fine-Tuning (RFT) to teach AI models to convert high-level PyTorch code into GPU-optimized Triton code.
+
+Why RFT is Well-Suited for This Task
+- No large labeled dataset required
+- Output code is directly verifiable
+- Large search space with no analytical solution
+
+Reward Function Components
+1. Formatting (Partial Credit)
+    - Correct output tags
+    - Appropriate imports
+    - Adherence to Triton best practices
+2. Compilation
+     - Binary reward: 1 if code compiles and runs, 0 if not
+3. Correctness
+    - Binary reward: 1 if code passes test suite
+    - Anti-reward-hacking measures: Monkey patching kernels with no-ops to verify actual computation
+4. Performance
+    - Not implemented but recommended
+    - Would incentivize more efficient code generation strategies
+
+## Alternatives to Fine-Tuning (That Isn't In-Context Learning)
+
+### Prompt Tuning / Prefix Tuning
 
 Prompt Tuning v2 paper [here](https://arxiv.org/pdf/2110.07602.pdf). This is the idea of *tuning only the continuous prompts*. Specificaly, adding trainable continous embeddings to the original sequence of input word embeddings. Only these *continuous prompts* are updated during training.
 
@@ -122,13 +158,6 @@ They apply a MLP to each transformer block which is of the shape: $P_{idx} X dim
 
 I quite like this approach because you get a way of producing task specific vectors without having to keep copies of the LLM.
 
-### Quiet-STaR
-
-[Quiet-STaR - Paper](https://arxiv.org/pdf/2403.09629.pdf)
-
-This is a process of fine-tuning to follow a CoT type approach, by producing "thoughts" after each token, which are combined with the previous tokens to predict the next token. They call it *Quiet* because they are training the model to think before it speaks, but not neccesarily outputting the "thoughts".
-
-The start of thought and end of thought tokens are `---` as typically in text, this is used as a 'break' or 'pause'.
 
 ## Domain Adaptation
 
