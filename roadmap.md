@@ -7,7 +7,14 @@
     - [ ] www.learnpytorch.io
     - [ ] Implement [these papers](https://x.com/romitheguru/status/1874656226224570541) in PyTorch
 - [ ] Cuda
+    - [ ] [Intro to CUDA](https://www.youtube.com/watch?v=nOxKexn3iBo)
 - [ ] Mojo
+    - [X] Basic Matrix Implementation
+    - [ ] Optimized Matrix Implementation
+    - [X] Linear/Logistic Regression
+    - [ ] MicroGrad
+    - [ ] Decision Tree
+    - [ ] DBSCAN (NearestNeighbors)
 - [ ] pySpark
     - [ ] https://sparkbyexamples.com/pyspark-tutorial/
     - [ ] Perform EDA on Kaggle datasets
