@@ -2,7 +2,7 @@
 
 - [ ] Go
     - [ ] The Go Programming Language Book
-    - [ ] `termflow` (a combo of a rewritten clikan & new features)
+    - [X] `termflow` (a combo of a rewritten clikan & new features)
 - [ ] PyTorch
     - [ ] www.learnpytorch.io
     - [ ] Implement [these papers](https://x.com/romitheguru/status/1874656226224570541) in PyTorch
