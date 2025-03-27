@@ -7,7 +7,6 @@
     - [ ] www.learnpytorch.io
     - [ ] Implement [these papers](https://x.com/romitheguru/status/1874656226224570541) in PyTorch
 - [ ] Cuda
-    - [ ] Re-implement [this blog post](https://maharshi.bearblog.dev/optimizing-softmax-cuda/)
 - [ ] Mojo
 - [ ] pySpark
     - [ ] https://sparkbyexamples.com/pyspark-tutorial/
