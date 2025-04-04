@@ -1,24 +1,34 @@
 # Roadmap (2025)
 
-- [ ] Go
+- Go
     - [ ] The Go Programming Language Book
     - [X] `termflow` (a combo of a rewritten clikan & new features)
-- [ ] PyTorch
+- PyTorch
     - [ ] www.learnpytorch.io
     - [ ] Implement [these papers](https://x.com/romitheguru/status/1874656226224570541) in PyTorch
-- [ ] Cuda
+- Cuda
     - [ ] [Intro to CUDA](https://www.youtube.com/watch?v=nOxKexn3iBo)
-- [ ] Mojo
+- Mojo
     - [X] Basic Matrix Implementation
     - [ ] Optimized Matrix Implementation
+        - [X] Vectorized MatMul
+        - [X] Tiled MatMul
+        - [ ] L1/L2/L3 Cache & Register Blocking
+        - [ ] Data Packing
+        - [ ] Parallelization
     - [X] Linear/Logistic Regression
-    - [ ] MicroGrad
-    - [ ] Decision Tree
+    - [ ] Trees
+        - [X] DecisionTree
+        - [ ] RandomForest
     - [ ] DBSCAN (NearestNeighbors)
-- [ ] pySpark
+    - [ ] GPU Programming
+    - [ ] Inference of Deep Learning Models
+- pySpark
     - [ ] https://sparkbyexamples.com/pyspark-tutorial/
     - [ ] Perform EDA on Kaggle datasets
-- [ ] MLOps
+- MLOps
     - [ ] Docker
     - [ ] Terraform
     - [ ] MLFlow
+- Theorectical ML
+    - [ ] Ian Goodfellow's Deep Learning Book
