@@ -48,3 +48,26 @@ repos:
       pass_filenames: false
       files: ^(pyproject.toml|\.pre-commit-config\.yaml)$
 ```
+
+## `venv-pack`
+
+[venv-pack](https://jcristharif.com/venv-pack/index.html) is a tool recommended by Spark to produce consistent production workspaces given a virtual environment.
+
+You can simply create a tarball by running the following:
+
+```bash
+venv-pack -o my_env.tar.gz
+```
+
+## ipython / kernels
+
+### Setting up a Kernel
+
+`pip install ipykernel`
+`python -m ipykernel install --user --name <name_of_kernel>`
+
+You can now access that kernel. If you (and you should) installed the `ipykernel` inside a virtual env, then it has access to all the packages inside that virtual env.
+
+### Removing Kernels
+
+`jupyter kernelspec remove <name_of_kernel>`
