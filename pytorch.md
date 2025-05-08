@@ -22,6 +22,26 @@ The resulting matrix has the shape of the outer dimensions:
 - (2, 3) @ (3, 2) -> (2, 2)
 - (3, 2) @ (2, 3) -> (3, 3)
 
+## torch.Norm
+
+```python
+x = torch.rand(3, 16, 16)
+x.norm(dim=-1, keep_dims=True)
+````
+
+This calculates the L2 norm for each 16 length vector in the last dimension (aka (3 * 16) 48 vectors) and stores in a (3, 16, 1) tensor. If keepdims was False, you would get a (3, 16) but it's useful to have the same dimenision becuase you can do things like:
+
+```python
+x = torch.rand(3, 16, 16)
+x /= x.norm(dim=-1, keep_dims=True)
+```
+
+which means that each element in the original x tensor is divided by their corresponding vector norm. The outcome of dividing a vector by its L2 norm is a unit vector - a vector whose L2 norm is exactly 1. Normalization in this way removes the influence of the vector's magnitude (length).
+
+
+
+
+
 ## Reshaping / Changing Dimensions
 
 | Method | One-line description |
@@ -58,3 +78,5 @@ summary(model, input_size=<some input shape>)
 ```
 
 This will show you how the input is transformed when passed through the model.
+
+
