@@ -164,9 +164,6 @@ The core idea behind PagedAttention is to partition the KV cache of each sequenc
 
 [Hopsworks](https://www.hopsworks.ai/dictionary/pagedattention) also has a nice blog post on this topic.
 
-#### ray
-
-`ray` is a useful package for performing batch inference at scale. [This](https://docs.vllm.ai/en/v0.8.1/getting_started/examples/distributed.html) is there example for doing offline batch inference at scale.
 
 ## LLM Sampling
 
