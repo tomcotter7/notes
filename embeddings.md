@@ -100,6 +100,16 @@ They use large & high performing embedding models to finetune smaller embedding 
 
 I think this sits as an alternative to GPL, because that used MarginMSE loss with cross-encoder labels, whereas this filters out the potentially 'bad' negatives by using a guide model.
 
+### A Simple Framework for Contrastive Learning of Visual Representations
+
+In [this paper](https://arxiv.org/abs/2002.05709), they focus on on Contrastive Learning for Visual Representations, but potentially some of the knowledge could be useful for an type of embedding based contrastive learning.
+
+They show a number of things:
+    - (1) For image-based tasks, data augmentation is v. important.
+    - (2) Introducing a non-linear transformation between the representation (the embedding) and the contrastive loss function substantially improves perfomance.
+        - They hypothesized that this is because optimizing for the contrastive loss may cause a slight information loss in the embeddings (for the final classification task), so adding this non-linear transformation means that this is mitigated.  
+    - (3) Contrastive Loss requires a much higher batch size compared to supervised learning.
+
 ## Evaluation
 
 ### Evaluating Embedding APIs for Inofmration Retrieval

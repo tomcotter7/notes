@@ -23,9 +23,10 @@
     - [ ] DBSCAN (NearestNeighbors)
     - [ ] GPU Programming
     - [ ] Inference of Deep Learning Models
-- pySpark
-    - [ ] https://sparkbyexamples.com/pyspark-tutorial/
-    - [ ] Perform EDA on Kaggle datasets
+- [x] pySpark
+    - [ ] ~~https://sparkbyexamples.com/pyspark-tutorial/~~
+    - [ ] ~~Perform EDA on Kaggle datasets~~
+    - [X] Get a Job doing pySpark
 - MLOps
     - [ ] Docker
     - [ ] Terraform

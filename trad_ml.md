@@ -33,6 +33,14 @@ UMAP is a manifold learning technique for dimension reduction. Find the paper [h
 
 ## Classification
 
+### Metrics
+
+#### F1 Score vs Macro F1 Score
+
+F1 Score is typically associated with a single class in multi-class classification problems. In multi-class problems, you can also use Macro F1-Score, which is the average of the F1-score for all possible classes the model can predict.
+
+Macro F1-Score treats all classes equally, regardless of how many samples each class has (an unweighted average).
+
 ### Logistic Regression
 
 For binary classification:

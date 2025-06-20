@@ -15,6 +15,7 @@ $SwiGLU(x_i) = swish((W1 \cdot x_i) + b) x ((V \cdot x_i) + c)$.
 In PyTorch:
 
 ```python
+
 class SwiGLU(nn.Module):
     
     def __init__(self, w1, w2, b, c) -> None:
