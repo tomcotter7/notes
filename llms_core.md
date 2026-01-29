@@ -47,7 +47,8 @@ Assume, we have 8 $q$ heads, with 4 sub-groups. This means we have 4 $k$ and $v$
 
 #### Flash Attention
 
-Notes on [this yt video](https://youtube.com/watch?v=zy8ChVd_oTM).
+> [!TODO]
+> - [ ] Notes on [this yt video](https://youtube.com/watch?v=zy8ChVd_oTM).
 
 ### Positional Embeddings
 
@@ -57,25 +58,48 @@ If you want to preserve order, we need to add positional embeddings.
 
 #### Absolute Positional Embeddings
 
-Each position in the word is assigned a positional embedding as well as the word embedding. These are then added together to form the input to the model.
+To represent the positional embedding, we have a vector for that position (for example, position 2 has a vector, position 3 has a vector, and so on). We add the word embedding & the positional embedding to form the input to the transformer layer.
 
-These can be learned or sinusoidal. These have similar performance. Learned embeddings have a max length (creating the MAX context length).
+These can be:
+    - Learned - We learn a vector for each position we want to represent. This means that the number of positions we *can* represent is bounded by how many we learnt in the first place.
+    - Sinusoidal - $PE_{(pos, 2i) = sin(pos/10000^{\frac{2i}{d_{model}}$, basically we construct a unique positional embedding for each possible position in the sequence.
+
+These two methods have similar performance.
+
+Another problem is that every single positional embedding is essentially independent from each other - therefore there is no difference between position 1 and 2, vs between position 2 and 512. Intuitively, it would be better to consider positions 1 and 2 to be more similar to each other...
 
 #### Relative Positional Embeddings
 
-Learn a representation for every pair of tokens in a sentence. To do this, we have to modify the attention mechanism to handle these embeddings.
+Learn a representation for every pair of tokens in a sentence. For example, some way to represent the tokens being 3 tokens apart.
 
-In practice, these are slow. These require an extra step in the attention layer.
+To do this, we have to modify the attention mechanism to handle these embeddings. There are a number of ways this is possible.
+
+For example, T5 represents each possible positional offset with a bias, which is a floating point number. This creates a matrix of relative position embeddings, which can be added to the product $QK^{T}$ in the self-attention mechanism.
+
+This method can extend to arbitrarlily long sequences. However, in practice, these are slow. This is because these require an extra step in the attention layer (the addition of the relative embeddings).
 
 #### RoPE
 
 Rotary Positional Embeddings.
 
-Rather than add a positional vector to the input, they propose adding a rotation to word embedding. The further in the sentence the word is, the more it is rotated.
+Rather than add a positional vector to the input, they propose adding a rotation to word embedding. The amount that we rotate is a integer multiple of the angle $\Theta$ (which is how much you would rotate by if the token is at position 2). The further in the sentence the word is, the more it is rotated.
+
+This means that the vectors at the beginning of the sequence stay the same even if we add more tokens, which in turn makes them easier to cache.
 
 The embed the position M, we rotate the word embedding by $M \cdot \theta$.
 
-The relative position of words are preserved as well. 
+The relative position of words are preserved as well. For example:
+
+- The pig chased the dog
+- Once upon a time, the pig chased the dog.
+
+The angle between pig and dog will remain the same, because they are rotated by the same amount - an additional $4 \cdot \Theta$.
+
+They basically create a [rotation matrix](https://en.wikipedia.org/wiki/Rotation_matrix), which rotates a vector by an angle of $m\Theta$. They apply the linear transformations to get the Q & K matrices BEFORE applying the rotation, this is so that the rotational invariance is preserved.
+
+> [!TODO]
+> - [ ] Implement this in PyTorch.
+> - [ ] Read the paper.
 
 [Video](https://www.youtube.com/watch?v=o29P0Kpobz0)
 [Paper](https://arxiv.org/pdf/2104.09864)

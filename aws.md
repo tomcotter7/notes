@@ -101,6 +101,19 @@ An example config file is as follows:
 So this would be a model that takes in a vector input of size 512, and outputs a vector of size 768. The `instance_group` specifies that we want to use a GPU, and the `dynamic_batching` specifies that we want to batch the requests in groups of 5.
 
 [This article](https://aws.plainenglish.io/deploying-transformers-onnx-models-on-amazon-sagemaker-7689e8710328) gives some more details on how to deploy with Triton. See the notebook [here](https://github.com/RamVegiraju/SageMaker-Deployment/blob/master/RealTime/Multi-Model-Endpoint/Triton-MME-GPU/triton-mme-onnx-embeddings.ipynb?source=post_page-----7689e8710328--------------------------------)
+### Sagemaker Inference Endpoints
+
+#### Accessing Logs
+
+You can quickly search available logs from a Sagemaker endpoint using:
+
+```
+fields @timestamp, @logStream, @message
+| filter @logStream like /^variant-2\//
+| filter @message like /(?i)(error|exception|traceback|fatal|modelerror)/
+| sort @timestamp desc
+| limit 200
+```
 
 ## Lambda
 
