@@ -16,3 +16,4 @@ Extras;
     - A reduction (in computational theory) from problem A to problem B is an algorithm that solves problem A by using a hypothetical subroutine (an *oracle*) that can solve any instance of problem B in a single step.
     - They show that the generative task of an LLM can be reduced to the supervised learning problem of "is this answer valid to the question" - it's a continual stream of these checks.
 - "agnostically". If an algorithm is agnostically learning, then it is making no assumptions about the true nature of the data or the target function. Specifically, it does not assume that a perfect, zero-error model exists within the hypothesis class H.
+

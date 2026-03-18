@@ -16,6 +16,8 @@ This sections lists my personal professional revelations, specifically on just b
 - **Graphical presentations**!
     - Work should be presented in a manner that is easy to comprehend by everyone involved.
     - For instance, business insights should be right at the top, followed by easily digestible graphics which effectively convey the point. Only then should the technical writing come.
+- Present the goals before the project.
+    - Within the project hypthosis/early research, we should be stating the product outcome of what we expect to happen. Either via a measurable metric, or how the user will interact with the new tool. 
 - Impostor syndrome is in a sense "fake" & can be fought past in one of two ways. I personally like to do both.
     - Locking in - just ensuring that you are always doing as much work as possible.
     - Meditative - sitting with the feeling and understanding that it won't last forever.

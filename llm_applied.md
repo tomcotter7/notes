@@ -40,6 +40,14 @@ They split up the models into *Proposers* & *Aggregators*:
 
 It is essentially multiple models working in tandem.
 
+### Prompt Repetition Improves Non-Reasoning LLMs
+
+[This paper](https://arxiv.org/pdf/2512.14982) discusses an interesting topic, in which the discover that simply repeating a prompt twice (or even 3 times) significantly improves LLM performance on tasks, without hurting latency.
+
+The reason that latency isn't affected is because the prompt is typically cached during the pre-fill decoding phase, so this doesn't affect inference latency. The reason that this works so well is because repeating the prompt "enables each prompt token to attend to every other prompt token."
+
+Note that this does not work for reasoning LLMs. Also, repeating the prompt does not meaningfully increase the length of the generated outputs.
+
 
 ## Scaling Test Time Compute
 

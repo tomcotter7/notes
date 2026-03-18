@@ -58,3 +58,19 @@ Input (4x4):    Using 2x2 MaxPool:
 2  6  7  8
 ```
 
+## The Unreasonable Effectiveness of RNNs
+
+[This blog post](https://karpathy.github.io/2015/05/21/rnn-effectiveness/) by Karpathy is a small dive into RNNs and the interesting outputs you can get with them. At it's core, an RNN has some internal state that get's updated at every layer and every timestep. It produces an output based on the current value of the hidden state, and the input to that layer at that timestep.
+
+- The hidden state is calculated by: $h_t = tanh(W_hh * h_{t-1}) + W_xh * x_t$ 
+- The output is calculated by : $y = W_hy * h_t$
+
+RNNs can produce different types of outputs from different kinds of inputs, including dynamically sized sequence -> dynamically sized sequence, or fixed size inputs -> dynamically sized outputs, etc.
+
+In the blog post, Karpathy trains a number of character level (predict the next character) RNNs on various tasks like Shakespeare, C code & a Paul Graham generator.
+
+One interesting insight is that during training, the model learns progressively, spaces first, then short words, then long words, and then finally themes/long-range structured.
+
+## Understanding LSTM Networks
+
+In [this article](https://colah.github.io/posts/2015-08-Understanding-LSTMs/), they go in-depth on how LSTMs work. Particularly they discuss the various gates (forget, update) that are used to change what the model remembers over time as it receives new information. These are done using Linear layers with a Sigmoid activation function, since Sigmoids put the output between 0 and 1, (0 meaning the model can forget this, and 1 meaning the model should retain this information, in the case of the forget gate).
