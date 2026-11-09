@@ -38,10 +38,6 @@ x /= x.norm(dim=-1, keep_dims=True)
 
 which means that each element in the original x tensor is divided by their corresponding vector norm. The outcome of dividing a vector by its L2 norm is a unit vector - a vector whose L2 norm is exactly 1. Normalization in this way removes the influence of the vector's magnitude (length).
 
-
-
-
-
 ## Reshaping / Changing Dimensions
 
 | Method | One-line description |
@@ -52,6 +48,7 @@ which means that each element in the original x tensor is divided by their corre
 | torch.squeeze(input) | Squeezes input to remove all the dimenions with value 1. |
 | torch.unsqueeze(input, dim) | Returns input with a dimension value of 1 added at dim. |
 | torch.permute(input, dims) | Returns a view of the original input with its dimensions permuted (rearranged) to dims. |
+
 
 ## Saving and Loading Models
 
@@ -79,4 +76,9 @@ summary(model, input_size=<some input shape>)
 
 This will show you how the input is transformed when passed through the model.
 
+## DDP
+
+DDP is a method of training that gives each GPU a full copy of the model, but each copy processes different data.
+
+After the backward step on the GPU, an "all-reduce" step averages the gradients across all N GPUs. Each GPU applies the same optimizer step independently, and therefore the weights stay in sync.
 
